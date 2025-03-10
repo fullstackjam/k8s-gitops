@@ -30,7 +30,7 @@ make configure
 
     ```
     Text editor (nvim):
-    Enter seed repo (github.com/fullstackjam/homelab): github.com/example/homelab
+    Enter seed repo (github.com/fullstackjam/k8s-gitops): github.com/example/k8s-gitops
     Enter your domain (fullstackjam.com): example.com
     ```
 

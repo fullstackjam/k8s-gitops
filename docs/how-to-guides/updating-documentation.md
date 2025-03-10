@@ -1,7 +1,7 @@
 # Updating documentation (this website)
 
 This project uses the [Diátaxis](https://diataxis.fr) technical documentation framework.
-The website is generated using [Material for MkDocs](https://squidfunk.github.io/mkdocs-material) and can be viewed at [homelab.fullstackjam.com](https://homelab.fullstackjam.com).
+The website is generated using [Material for MkDocs](https://squidfunk.github.io/mkdocs-material) and can be viewed at [k8s-gitops.fullstackjam.com](https://k8s-gitops.fullstackjam.com).
 
 There are 4 main parts:
 

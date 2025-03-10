@@ -1,4 +1,4 @@
-module git.fullstackjam.com/fullstackjam/homelab/kubernetes/platform/secret-generator
+module git.fullstackjam.com/fullstackjam/k8s-gitops/kubernetes/platform/secret-generator
 
 go 1.19
 

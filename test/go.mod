@@ -1,4 +1,4 @@
-module git.fullstackjam.com/fullstackjam/homelab
+module git.fullstackjam.com/fullstackjam/k8s-gitops
 
 go 1.21
 
