@@ -5,11 +5,14 @@
 KUBECONFIG = $(shell pwd)/kubeconfig.yaml
 KUBE_CONFIG_PATH = $(KUBECONFIG)
 
-default: system external smoke-test post-install
+default: bootstrap system external smoke-test post-install
 
 configure:
 	./scripts/configure
 	git status
+
+bootstrap:
+	make -C bootstrap
 
 system:
 	make -C system

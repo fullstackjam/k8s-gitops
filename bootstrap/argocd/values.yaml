@@ -35,12 +35,12 @@ argocd-apps:
       namespace: argocd
       generators:
         - git:
-            repoURL: &repoURL https://github.com/fullstackjam/homelab
+            repoURL: &repoURL https://github.com/fullstackjam/k8s-gitops
             revision: &revision master
             directories:
-              - path: system/*
-              - path: platform/*
-              - path: apps/*
+              - path: kubernetes/system/*
+              - path: kubernetes/platform/*
+              - path: kubernetes/apps/*
       template:
         metadata:
           name: '{{path.basename}}'
