@@ -1,0 +1,10 @@
+nfs-subdir-external-provisioner:
+  nfs:
+    server: "192.168.2.200"
+    path: "/data/k3s"
+    mountOptions:
+      - nolock
+
+  storageClass:
+    name: "nfs"
+    defaultClass: true
