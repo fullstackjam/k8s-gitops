@@ -15,7 +15,7 @@ ntfy = {
 extra_secrets = {
   # Try to keep this to a minimum with third-party secrets
   # Consider using the secret generator if possible
-  # ../platform/global-secrets/files/secret-generator/config.yaml
+  # ../kubernetes/platform/global-secrets/files/secret-generator/config.yaml
   #
   # key = "value"
 }

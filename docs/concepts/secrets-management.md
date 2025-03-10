@@ -33,9 +33,9 @@ flowchart TD
 
 This is useful when you want to generate random secrets like admin password and store in global secrets.
 
-```yaml title="./platform/global-secrets/files/secret-generator/config.yaml" hl_lines="2-6"
+```yaml title="./kubernetes/platform/global-secrets/files/secret-generator/config.yaml" hl_lines="2-6"
 --8<--
-./platform/global-secrets/files/secret-generator/config.yaml
+./kubernetes/platform/global-secrets/files/secret-generator/config.yaml
 --8<--
 ```
 
