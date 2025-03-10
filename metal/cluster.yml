@@ -1,4 +1,0 @@
-- name: Install Kubernetes addons
-  hosts: localhost
-  roles:
-    - cilium
