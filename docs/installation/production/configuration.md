@@ -41,12 +41,5 @@ It will prompt you to edit the inventory:
 - Network interface: usually it's `eth0`, mine is `eno1`
 - MAC address: the **lowercase, colon separated** MAC address of the above network interface
 
-!!! example
-
-    ```yaml title="metal/inventories/prod.yml"
-    --8<--
-    metal/inventories/prod.yml
-    --8<--
-    ```
 
 At the end it will show what has changed. After examining the diff, commit and push the changes.
