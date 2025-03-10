@@ -35,7 +35,7 @@ argocd-apps:
       namespace: argocd
       generators:
         - git:
-            repoURL: &repoURL https://github.com/fullstackjam/homelab-test
+            repoURL: &repoURL https://github.com/fullstackjam/homelab
             revision: &revision master
             directories:
               - path: system/*
@@ -48,7 +48,7 @@ argocd-apps:
           destination:
             name: in-cluster
             namespace: '{{path.basename}}'
-          project: default
+          project: default  # TODO
           source:
             repoURL: *repoURL
             path: '{{path}}'

@@ -3,8 +3,11 @@
 env ?= prod
 export KUBECONFIG = $(shell pwd)/kubeconfig.yaml
 
-default: cluster
+default: helm-diff-check cluster
 
+helm-diff-check:
+	@helm plugin list | grep -q diff || helm plugin install https://github.com/databus23/helm-diff
+	
 cluster:
 	ansible-playbook \
 		--inventory inventories/${env}.yml \
