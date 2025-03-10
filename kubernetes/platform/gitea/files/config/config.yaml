@@ -16,5 +16,5 @@
 #     owner: ops
 #     private: false
 #     migrate:
-#       source: https://github.com/fullstackjam/homelab
+#       source: https://github.com/fullstackjam/k8s-gitops
 #       mirror: true

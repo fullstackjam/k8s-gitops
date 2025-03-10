@@ -20,7 +20,7 @@ Install the following packages:
 Clone the repository and checkout the development branch:
 
 ```sh
-git clone https://github.com/fullstackjam/homelab
+git clone https://github.com/fullstackjam/k8s-gitops
 git checkout dev
 ```
 
@@ -59,7 +59,7 @@ See [admin credentials](../post-installation/#admin-credentials) for default pas
 If you want to make some changes, simply commit to the local `dev` branch and push it to Gitea in the sandbox:
 
 ```sh
-git remote add sandbox https://git.127-0-0-1.nip.io/fullstackjam/homelab
+git remote add sandbox https://git.127-0-0-1.nip.io/fullstackjam/k8s-gitops
 git config http.https://git.127-0-0-1.nip.io.sslVerify false
 
 git add foobar.txt

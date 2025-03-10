@@ -2,10 +2,10 @@
 
 ## Fork this repository
 
-Because [this project](https://github.com/fullstackjam/homelab) applies GitOps practices,
+Because [this project](https://github.com/fullstackjam/k8s-gitops) applies GitOps practices,
 it's the source of truth for _my_ homelab, so you'll need to fork it to make it yours:
 
-[Fork fullstackjam/homelab](https://github.com/fullstackjam/homelab/fork){ .md-button }
+[Fork fullstackjam/k8s-gitops](https://github.com/fullstackjam/k8s-gitops/fork){ .md-button }
 
 By using this project you agree to [the license](../../reference/license.md).
 
