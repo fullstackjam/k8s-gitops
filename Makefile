@@ -5,7 +5,7 @@
 KUBECONFIG = $(shell pwd)/metal/kubeconfig.yaml
 KUBE_CONFIG_PATH = $(KUBECONFIG)
 
-default: metal external smoke-test post-install
+default: metal system external smoke-test post-install
 
 configure:
 	./scripts/configure
@@ -13,6 +13,9 @@ configure:
 
 metal:
 	make -C metal
+
+system:
+	make -C system
 
 external:
 	make -C external

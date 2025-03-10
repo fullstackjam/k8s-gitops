@@ -1,9 +1,0 @@
----
-# Vars file for ArgoCD role
-
-argocd_namespace: argocd
-argocd_instance_name: argocd
-argocd_chart_path: ./defaults
-argocd_release_name: argocd
-argocd_values_file: "./defaults/values.yaml"
-argocd_field_manager: argocd-controller
