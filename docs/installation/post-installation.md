@@ -6,7 +6,7 @@ Save the following files to a safe location like a password manager (if you're u
 
 - `~/.ssh/id_rsa`
 - `~/.ssh/id_rsa.pub`
-- `./metal/kubeconfig.yaml`
+- `./kubeconfig.yaml`
 - `~/.terraform.d/credentials.tfrc.json`
 - `./external/terraform.tfvars`
 

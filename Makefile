@@ -2,17 +2,14 @@
 .PHONY: *
 .EXPORT_ALL_VARIABLES:
 
-KUBECONFIG = $(shell pwd)/metal/kubeconfig.yaml
+KUBECONFIG = $(shell pwd)/kubeconfig.yaml
 KUBE_CONFIG_PATH = $(KUBECONFIG)
 
-default: metal system external smoke-test post-install
+default: system external smoke-test post-install
 
 configure:
 	./scripts/configure
 	git status
-
-metal:
-	make -C metal
 
 system:
 	make -C system
