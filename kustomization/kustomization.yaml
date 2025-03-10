@@ -3,3 +3,4 @@ resources:
   - flask-watchlist.yaml
   - portfolio.yaml
   - autoally-backend-secret.yaml
+  - ciliuml2announcementpolicy.yaml
