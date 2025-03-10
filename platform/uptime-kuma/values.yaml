@@ -1,0 +1,17 @@
+uptime-kuma:
+  ingress:
+    enabled: true
+    className: nginx
+    hosts:
+      - host: &host uptime-kuma.fullstackjam.com
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    tls:
+      - hosts:
+          - *host
+        secretName: uptime-kuma-tls-certificate
+  image:
+    tag: latest

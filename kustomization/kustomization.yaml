@@ -1,0 +1,5 @@
+resources:
+  - autoally-backend.yaml
+  - flask-watchlist.yaml
+  - portfolio.yaml
+  - autoally-backend-secret.yaml
