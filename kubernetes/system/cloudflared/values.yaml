@@ -38,7 +38,7 @@ app-template:
     credentials:
       enabled: true
       type: secret
-      # Created by ../../external/cloudflared
+      # Created by ../../terraform/cloudflared
       name: cloudflared-credentials
       globalMounts:
         - path: /etc/cloudflared/credentials.json
