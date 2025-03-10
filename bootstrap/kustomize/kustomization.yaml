@@ -1,0 +1,3 @@
+resources:
+  - ciliuml2announcementpolicy.yaml
+  - patch-hubble-ui.yaml

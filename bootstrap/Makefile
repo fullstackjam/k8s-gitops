@@ -2,7 +2,12 @@
 
 export KUBECONFIG = $(shell pwd)/../metal/kubeconfig.yaml
 
-.PHONY: bootstrap
+.PHONY: kustomize bootstrap
+
+default: kustomize bootstrap
+
+kustomize:
+	kubectl apply -k kustomize
 
 bootstrap:
 	ansible-playbook \
