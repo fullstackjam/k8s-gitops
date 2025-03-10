@@ -7,4 +7,4 @@
 *kubeconfig.yaml
 Chart.lock
 site/
-*secret.yaml
+kustomization/*secret.yaml
