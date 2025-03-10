@@ -5,7 +5,7 @@
 KUBECONFIG = $(shell pwd)/metal/kubeconfig.yaml
 KUBE_CONFIG_PATH = $(KUBECONFIG)
 
-default: bootstrap kustomize external smoke-test post-install
+default: bootstrap external smoke-test post-install
 
 configure:
 	./scripts/configure
@@ -13,9 +13,6 @@ configure:
 
 bootstrap:
 	make -C bootstrap
-
-kustomize:
-	kubectl apply -k kustomize
 
 external:
 	make -C external
