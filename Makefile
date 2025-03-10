@@ -5,7 +5,7 @@
 KUBECONFIG = $(shell pwd)/kubeconfig.yaml
 KUBE_CONFIG_PATH = $(KUBECONFIG)
 
-default: bootstrap external smoke-test post-install
+default: bootstrap terraform smoke-test post-install
 
 configure:
 	./scripts/configure
@@ -14,8 +14,8 @@ configure:
 bootstrap:
 	make -C bootstrap
 
-external:
-	make -C external
+terraform:
+	make -C terraform
 
 smoke-test:
 	make -C test filter=Smoke

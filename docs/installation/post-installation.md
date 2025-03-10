@@ -8,7 +8,7 @@ Save the following files to a safe location like a password manager (if you're u
 - `~/.ssh/id_rsa.pub`
 - `./kubeconfig.yaml`
 - `~/.terraform.d/credentials.tfrc.json`
-- `./external/terraform.tfvars`
+- `./terraform/terraform.tfvars`
 
 ## Admin credentials
 
