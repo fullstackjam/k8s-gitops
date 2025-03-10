@@ -1,0 +1,9 @@
+- name: Install Kubernetes addons
+  hosts: localhost
+  roles:
+    - cilium
+
+- name: Install argocd
+  hosts: localhost
+  roles:
+    - argocd
