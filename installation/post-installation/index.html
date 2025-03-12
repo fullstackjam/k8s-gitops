@@ -1178,12 +1178,13 @@
 </li>
 <li>Gitea:<ul>
 <li>Username: <code>gitea_admin</code></li>
-<li>Password: get from <code>global-secrets</code> namespace</li>
+<li>Password: run <code>./scripts/gitea-admin-password</code></li>
 </ul>
 </li>
 <li>Kanidm:<ul>
 <li>Usernames: <code>idm_admin</code></li>
 <li>Password: run <code>./scripts/kanidm-reset-password idm_admin</code></li>
+<li>Login Command: <code>kanidm login --url "https://auth.fullstackjam.com" --name idm_admin</code></li>
 </ul>
 </li>
 <li>Other apps:<ul>
