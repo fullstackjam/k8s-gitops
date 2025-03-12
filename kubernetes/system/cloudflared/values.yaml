@@ -10,7 +10,6 @@ app-template:
           args:
             - tunnel
             - run
-            - --parallel=4
             - --protocol=quic
             - --config=/etc/cloudflared/config.yaml
   configMaps:
