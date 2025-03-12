@@ -27,7 +27,6 @@
     Run the following script:
 
     ```sh
-    kanidm login --url "https://auth.fullstackjam.com" --name idm_admin
     ./scripts/onboard-user fullstackjam "Jam Ma" "fullstackjam@outlook.com"
     ```
 

@@ -17,10 +17,11 @@ Save the following files to a safe location like a password manager (if you're u
     - Password: run `./scripts/argocd-admin-password`
 - Gitea:
     - Username: `gitea_admin`
-    - Password: get from `global-secrets` namespace
+    - Password: run `./scripts/gitea-admin-password`
 - Kanidm:
     - Usernames: `idm_admin`
     - Password: run `./scripts/kanidm-reset-password idm_admin`
+    - Login Command: `kanidm login --url "https://auth.fullstackjam.com" --name idm_admin`
 - Other apps:
     - Username: `admin`
     - Password: get from `global-secrets` namespace
