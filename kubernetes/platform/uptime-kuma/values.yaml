@@ -9,6 +9,8 @@ uptime-kuma:
             pathType: ImplementationSpecific
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
+      external-dns.alpha.kubernetes.io/target: "homelab-tunnel.fullstackjam.com"
+      external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
     tls:
       - hosts:
           - *host
