@@ -22,6 +22,9 @@ Save the following files to a safe location like a password manager (if you're u
     - Usernames: `idm_admin`
     - Password: run `./scripts/kanidm-reset-password idm_admin`
     - Login Command: `kanidm login --url "https://auth.fullstackjam.com" --name idm_admin`
+- Grafana:
+    - Usernames: `admin`
+    - Password: run `./scripts/grafana-reset-password idm_admin`
 - Other apps:
     - Username: `admin`
     - Password: get from `global-secrets` namespace
