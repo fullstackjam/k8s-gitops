@@ -3,6 +3,10 @@ kube-prometheus-stack:
     enabled: false
     forceDeployDatasources: true
     forceDeployDashboards: true
+    additionalDataSources:
+      - name: Loki
+        type: loki
+        url: http://loki:3100
   prometheus:
     prometheusSpec:
       ruleSelectorNilUsesHelmValues: false
@@ -51,6 +55,7 @@ kube-prometheus-stack:
     rules:
       kubeProxy: false
 
+  # https://blog.neilfren.ch/scraping-cluster-metrics-from-talos/
   kubeEtcd:
     enabled: true
     endpoints:

@@ -12,7 +12,7 @@ func TestTerraformExternal(t *testing.T) {
 
 	// Make a copy of the terraform module to a temporary directory. This allows running multiple tests in parallel
 	// against the same terraform module.
-	exampleFolder := test_structure.CopyTerraformFolderToTemp(t, "../external", ".")
+	exampleFolder := test_structure.CopyTerraformFolderToTemp(t, "../terraform", ".")
 
 	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: exampleFolder,
