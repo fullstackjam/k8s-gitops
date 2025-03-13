@@ -53,3 +53,13 @@ redis:
 externalRedis:
   addrs:
     - 192.168.2.29:6379
+
+mysql:
+  enable: false
+externalMysql:
+  migrate: true
+  host: 192.168.2.31
+  username: root
+  password: dragonfly
+  database: HmoP24FAd4Opt
+  port: 3306
