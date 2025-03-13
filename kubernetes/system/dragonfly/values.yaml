@@ -50,3 +50,6 @@ client:
               capabilities: ['pull', 'resolve']
 redis:
   enable: false
+externalRedis:
+  addrs:
+    - 192.168.2.29:6379
