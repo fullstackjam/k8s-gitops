@@ -15,6 +15,15 @@ kube-prometheus-stack:
       probeSelectorNilUsesHelmValues: false
       secrets:
         - etcd-certs
+      rention: 90d
+      retentionSize: 50GB
+      storageSpec:
+        volumeClaimTemplate:
+          spec:
+            storageClassName: nfs
+            resources:
+              requests:
+                storage: 50Gi
   alertmanager:
     alertmanagerSpec:
       containers:
