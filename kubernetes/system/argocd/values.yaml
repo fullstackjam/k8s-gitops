@@ -50,7 +50,7 @@ argocd-apps:
           destination:
             name: in-cluster
             namespace: '{{path.basename}}'
-          project: default  # TODO
+          project: default
           source:
             repoURL: *repoURL
             path: '{{path}}'
