@@ -9,6 +9,8 @@ kube-prometheus-stack:
       serviceMonitorSelectorNilUsesHelmValues: false
       podMonitorSelectorNilUsesHelmValues: false
       probeSelectorNilUsesHelmValues: false
+      secrets:
+        - etcd-certs
   alertmanager:
     alertmanagerSpec:
       containers:
