@@ -7,12 +7,8 @@ KUBE_CONFIG_PATH = $(KUBECONFIG)
 
 default: bootstrap terraform smoke-test post-install
 
-configure:
-	./scripts/configure
-	git status
-
 bootstrap:
-	make -C bootstrap
+	ansible-playbook kubernetes/system/bootstrap.yml
 
 terraform:
 	make -C terraform
