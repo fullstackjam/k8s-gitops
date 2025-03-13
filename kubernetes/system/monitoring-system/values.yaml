@@ -59,8 +59,8 @@ kube-prometheus-stack:
       - 192.168.2.26
     service:
       enabled: true
-      port: 2379
-      targetPort: 2379
+      port: 2381
+      targetPort: 2381
     serviceMonitor:
       scheme: https
       insecureSkipVerify: false
