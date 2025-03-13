@@ -19,6 +19,9 @@ smoke-test:
 post-install:
 	@./scripts/hacks
 
+test:
+	make -C test
+
 tools:
 	@docker run \
 		--rm \
@@ -34,13 +37,3 @@ tools:
 		--volume homelab-tools-nix:/nix \
 		--workdir $(shell pwd) \
 		docker.io/nixos/nix nix --experimental-features 'nix-command flakes' develop
-
-test:
-	make -C test
-
-
-docs:
-	mkdocs serve
-
-git-hooks:
-	pre-commit install
