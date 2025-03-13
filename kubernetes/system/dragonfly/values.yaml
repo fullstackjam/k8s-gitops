@@ -48,3 +48,5 @@ client:
             - hostNamespace: docker.io
               serverAddr: https://index.docker.io
               capabilities: ['pull', 'resolve']
+redis:
+  enable: false
