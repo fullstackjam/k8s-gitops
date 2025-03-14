@@ -50,7 +50,6 @@ nav:
     - concepts/certificate-management.md
     - concepts/tools-container.md
   - How-to guides:
-    - how-to-guides/alternate-dns-setup.md
     - how-to-guides/expose-services-to-the-internet.md
     - how-to-guides/use-both-github-and-gitea.md
     - how-to-guides/updating-documentation.md

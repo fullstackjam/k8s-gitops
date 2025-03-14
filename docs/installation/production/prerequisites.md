@@ -54,7 +54,7 @@ Additional capabilities:
 
 ## Domain
 
-Buying a domain is highly recommended, but if you don't have one, see [alternate DNS setup](../../how-to-guides/alternate-dns-setup.md).
+Buying a domain is highly recommended.
 
 ## BIOS setup
 

@@ -19,16 +19,30 @@ They are not permanent, we can change them in the future if better alternatives 
 
     - CHANGEME
 
-## Choosing the base OS
+## How to create Kubernetes Cluster
 
 **Context**
 
-I've tried several distributions, and each has advantages and disadvantages.
-Ubuntu has a good (enough) balance between stability and new features.
+I've tried k3s, kubespray, Talos.
+Talos has a good (enough) balance between stability and new features.
 
 **Decision**
 
-Use Ubuntu24.04 as the base OS.
+Use Talos as the base OS.
+
+**Consequences**
+
+`¯\_(ツ)_/¯`
+
+## Storage class
+
+**Context**
+
+There are a lot storage component in Kubernetes ecosystem.
+
+**Decision**
+
+Use NFS provisioner.
 
 **Consequences**
 
