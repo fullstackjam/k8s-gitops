@@ -694,27 +694,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../how-to-guides/alternate-dns-setup/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Alternate DNS setup
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../../how-to-guides/expose-services-to-the-internet/" class="md-nav__link">
         
   
@@ -963,9 +942,18 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#choosing-the-base-os" class="md-nav__link">
+  <a href="#how-to-create-kubernetes-cluster" class="md-nav__link">
     <span class="md-ellipsis">
-      Choosing the base OS
+      How to create Kubernetes Cluster
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      Storage class
     </span>
   </a>
   
@@ -1115,9 +1103,18 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#choosing-the-base-os" class="md-nav__link">
+  <a href="#how-to-create-kubernetes-cluster" class="md-nav__link">
     <span class="md-ellipsis">
-      Choosing the base OS
+      How to create Kubernetes Cluster
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      Storage class
     </span>
   </a>
   
@@ -1156,12 +1153,19 @@ They are not permanent, we can change them in the future if better alternatives 
 <li>CHANGEME</li>
 </ul>
 </details>
-<h2 id="choosing-the-base-os">Choosing the base OS</h2>
+<h2 id="how-to-create-kubernetes-cluster">How to create Kubernetes Cluster</h2>
 <p><strong>Context</strong></p>
-<p>I've tried several distributions, and each has advantages and disadvantages.
-Ubuntu has a good (enough) balance between stability and new features.</p>
+<p>I've tried k3s, kubespray, Talos.
+Talos has a good (enough) balance between stability and new features.</p>
 <p><strong>Decision</strong></p>
-<p>Use Ubuntu24.04 as the base OS.</p>
+<p>Use Talos as the base OS.</p>
+<p><strong>Consequences</strong></p>
+<p><code>¯\_(ツ)_/¯</code></p>
+<h2 id="storage-class">Storage class</h2>
+<p><strong>Context</strong></p>
+<p>There are a lot storage component in Kubernetes ecosystem.</p>
+<p><strong>Decision</strong></p>
+<p>Use NFS provisioner.</p>
 <p><strong>Consequences</strong></p>
 <p><code>¯\_(ツ)_/¯</code></p>
 
