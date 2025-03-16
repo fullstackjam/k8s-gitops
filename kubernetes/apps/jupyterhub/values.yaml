@@ -709,7 +709,7 @@ prePuller:
       pullSecrets: []
 
 ingress:
-  enabled: false
+  enabled: true
   annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
       external-dns.alpha.kubernetes.io/target: homelab-tunnel.fullstackjam.com
