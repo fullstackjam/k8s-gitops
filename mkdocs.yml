@@ -40,7 +40,6 @@ nav:
     - Production:
       - installation/production/prerequisites.md
       - installation/production/external-resources.md
-      - installation/production/configuration.md
       - installation/production/deployment.md
     - installation/post-installation.md
   - Getting started:
@@ -61,4 +60,3 @@ nav:
     - reference/changelog.md
     - reference/roadmap.md
     - reference/contributing.md
-    - reference/faq.md
