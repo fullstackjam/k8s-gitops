@@ -15,7 +15,8 @@ There are 4 main parts:
 To edit and view locally, run:
 
 ```sh
-make docs
+make tools
+mkdocs serve
 ```
 
 Then visit [localhost:8000](http://localhost:8000)
