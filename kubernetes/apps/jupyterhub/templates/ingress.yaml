@@ -23,4 +23,4 @@ spec:
               service:
                 name: proxy-public
                 port:
-                  number: 30251
+                  number: 80
