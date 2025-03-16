@@ -338,7 +338,7 @@ proxy:
     enabled: true
     type: letsencrypt
     #type: letsencrypt, manual, offload, secret
-    letsencrypt: letsencrypt-prod
+    letsencrypt:
       contactEmail:
       # Specify custom server here (https://acme-staging-v02.api.letsencrypt.org/directory) to hit staging LE
       acmeServer: https://acme-v02.api.letsencrypt.org/directory
@@ -346,7 +346,7 @@ proxy:
       key:
       cert:
     secret:
-      name:
+      name: jupyterhub-tls-certificate
       key: tls.key
       crt: tls.crt
     hosts:
