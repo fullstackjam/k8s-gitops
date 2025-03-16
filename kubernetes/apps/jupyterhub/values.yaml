@@ -188,7 +188,7 @@ proxy:
     rollingUpdate:
   # service relates to the proxy-public service
   service:
-    type: LoadBalancer
+    type: ClusterIP
     labels: {}
     annotations: {}
     nodePorts:
@@ -736,4 +736,3 @@ debug:
 
 global:
   safeToShowValues: false
-
