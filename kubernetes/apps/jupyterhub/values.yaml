@@ -332,22 +332,21 @@ proxy:
     resources: {}
   labels: {}
   https:
-    enabled: true
-    type: secret
+    enabled: false
+    type: letsencrypt
     #type: letsencrypt, manual, offload, secret
     letsencrypt:
-      contactEmail: fullstackjam@outlook.com
+      contactEmail:
       # Specify custom server here (https://acme-staging-v02.api.letsencrypt.org/directory) to hit staging LE
       acmeServer: https://acme-v02.api.letsencrypt.org/directory
     manual:
       key:
       cert:
     secret:
-      name: jupyterhub-tls-secret
+      name:
       key: tls.key
       crt: tls.crt
-    hosts:
-      - "jupyterhub.fullstackjam.com"
+    hosts: []
 
 # singleuser relates to the configuration of KubeSpawner which runs in the hub
 # pod, and its spawning of user pods such as jupyter-myusername.
@@ -706,13 +705,20 @@ prePuller:
       pullSecrets: []
 
 ingress:
-  enabled: false
-  annotations: {}
-  ingressClassName:
-  hosts: []
+  enabled: true
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    external-dns.alpha.kubernetes.io/target: homelab-tunnel.fullstackjam.com
+    external-dns.alpha.kubernetes.io/cloudflare-proxied: 'true'
+  ingressClassName: nginx
+  hosts:
+    - jupyterhub.fullstackjam.com
   pathSuffix:
   pathType: Prefix
-  tls: []
+  tls:
+    - hosts:
+        - jupyterhub.fullstackjam.com
+      secretName: jupyterhub-tls-certificate
   extraPaths: []
 
 # cull relates to the jupyterhub-idle-culler service, responsible for evicting
