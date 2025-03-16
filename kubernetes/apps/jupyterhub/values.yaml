@@ -45,6 +45,7 @@ hub:
     JupyterHub:
       admin_access: true
       authenticator_class: dummy
+      disable_check_xsrf: true
   service:
     type: ClusterIP
     annotations: {}
