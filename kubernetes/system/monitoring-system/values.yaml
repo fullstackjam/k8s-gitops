@@ -20,7 +20,7 @@ kube-prometheus-stack:
       storageSpec:
         volumeClaimTemplate:
           spec:
-            storageClassName: nfs
+            storageClassName: standard-rwo
             resources:
               requests:
                 storage: 50Gi
