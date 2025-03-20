@@ -1,7 +1,0 @@
-apiVersion: v2
-name: speedtest
-version: 0.0.0
-dependencies:
-  - name: jupyterhub
-    version: 4.1.0
-    repository: https://jupyterhub.github.io/helm-chart/
