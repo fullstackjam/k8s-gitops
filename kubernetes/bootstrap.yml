@@ -8,24 +8,15 @@
         name: argocd
         state: present
 
-    - name: Check if this is the first installation
-      kubernetes.core.k8s_info:
-        kind: Pod
-        label_selectors:
-          - app.kubernetes.io/instance=speedtest
-        field_selectors:
-          - status.phase=Running
-      register: first_install
-
     - name: Render ArgoCD manifests from Helm chart
       kubernetes.core.helm_template:
-        chart_ref: ./argocd
+        chart_ref: ./system/argocd
         include_crds: true
         release_name: argocd
         release_namespace: argocd
         dependency_update: true
         values_files:
-          - "argocd/values.yaml"
+          - "./system/argocd/values.yaml"
       register: argocd_manifests
 
     - name: Apply ArgoCD manifests
