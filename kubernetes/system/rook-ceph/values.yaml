@@ -9,7 +9,7 @@ rook-ceph-cluster:
     mon:
       count: 3
     mgr:
-      count: 2
+      count: 3
     dashboard:
       ssl: false
     logCollector:
@@ -38,7 +38,7 @@ rook-ceph-cluster:
     - name: standard-rwo
       spec:
         replicated:
-          size: 2
+          size: 3
       storageClass:
         enabled: true
         name: standard-rwo
@@ -60,11 +60,11 @@ rook-ceph-cluster:
       spec:
         metadataPool:
           replicated:
-            size: 2
+            size: 3
         dataPools:
           - name: data0
             replicated:
-              size: 2
+              size: 3
         metadataServer:
           activeCount: 1
           activeStandby: true
