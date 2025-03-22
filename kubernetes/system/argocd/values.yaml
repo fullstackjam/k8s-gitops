@@ -41,8 +41,8 @@ argocd-apps:
             revision: &revision master
             directories:
               - path: kubernetes/system/*
-              - path: kubernetes/platform/*
-              - path: kubernetes/apps/*
+              # - path: kubernetes/platform/*
+              # - path: kubernetes/apps/*
       template:
         metadata:
           name: '{{path.basename}}'
