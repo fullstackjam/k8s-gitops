@@ -5,7 +5,10 @@
 KUBECONFIG = $(shell pwd)/kubeconfig.yaml
 KUBE_CONFIG_PATH = $(KUBECONFIG)
 
-default: bootstrap terraform smoke-test post-install
+default: metal bootstrap terraform smoke-test post-install
+
+metal:
+	make -C metal
 
 bootstrap:
 	ansible-playbook kubernetes/bootstrap.yml
