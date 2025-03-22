@@ -1,9 +1,9 @@
 - name: Create Kubernetes cluster
   hosts: metal
   roles:
-    # - prerequisites
+    - prerequisites
     - k3s
-    # - automatic_upgrade
+    - automatic_upgrade
 
 - name: Install Kubernetes addons
   hosts: localhost
