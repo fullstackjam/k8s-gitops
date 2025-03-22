@@ -51,4 +51,6 @@ kube-prometheus-stack:
               send_resolved: true
   defaultRules:
     rules:
+      kubeControllerManager: false
       kubeProxy: false
+      kubeSchedulerAlerting: false
