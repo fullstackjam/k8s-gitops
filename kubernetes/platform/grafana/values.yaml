@@ -36,4 +36,4 @@ grafana:
   persistence:
     enabled: true
     accessModes:
-      - ReadWriteOnce
+      - ReadWriteMany
