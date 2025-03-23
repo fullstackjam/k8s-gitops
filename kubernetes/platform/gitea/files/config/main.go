@@ -66,7 +66,7 @@ func main() {
 			continue
 		}
 
-		_, _, err = client.AdminCreateUser(gitea.AdminCreateUserOption{
+		_, _, err = client.AdminCreateUser(gitea.CreateUserOption{
 			Username:           user.Name,
 			FullName:           user.FullName,
 			Email:              user.Email,
