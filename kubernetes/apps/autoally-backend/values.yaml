@@ -31,7 +31,7 @@ app-template:
               pathType: Prefix
               service:
                 name: main
-                port: http
+                port: 8000
       tls:
         - hosts:
             - *host
