@@ -10,6 +10,7 @@ import json
 import json
 import pexpect
 import requests
+import logging
 import subprocess
 import sys
 import urllib
@@ -31,33 +32,47 @@ gitea_url = f"https://{gitea_host}"
 
 kanidm_host = client.NetworkingV1Api().read_namespaced_ingress('kanidm', 'kanidm').spec.rules[0].host
 
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    handlers=[
+        logging.StreamHandler(sys.stdout),
+    ]
+)
+
+logger = logging.getLogger(__name__)
+
+
 def apply_secret(name: str, namespace: str, data: dict) -> None:
     try:
+        logger.info(f"Applying secret '{name}' in namespace '{namespace}'")
         client.CoreV1Api().read_namespaced_secret(name, namespace)
         patch_body = client.V1Secret(
             metadata=client.V1ObjectMeta(name=name),
             data=data,
         )
         client.CoreV1Api().replace_namespaced_secret(name, namespace, patch_body)
+        logger.info(f"Secret '{name}' updated successfully")
     except client.exceptions.ApiException:
-        # Secret doesn't exist, create a new one
+        logger.warning(f"Secret '{name}' not found, creating a new one")
         new_secret = client.V1Secret(
             metadata=client.V1ObjectMeta(name=name),
             data=data,
         )
         client.CoreV1Api().create_namespaced_secret(namespace, new_secret)
+        logger.info(f"Secret '{name}' created successfully")
 
 def setup_gitea_access_token(name: str, scopes: list[str]) -> None:
-    print(f"Setting up Gitea access token {gitea_url}")
+    logger.info(f"Setting up Gitea access token '{name}' with scopes {scopes}")
     current_tokens = requests.get(
         url=f"{gitea_url}/api/v1/users/{gitea_user}/tokens",
-        auth=(gitea_user,gitea_pass),
+        auth=(gitea_user, gitea_pass),
     ).json()
 
     if not any(token['name'] == name for token in current_tokens):
         resp = requests.post(
             url=f"{gitea_url}/api/v1/users/{gitea_user}/tokens",
-            auth=(gitea_user,gitea_pass),
+            auth=(gitea_user, gitea_pass),
             headers={
                 'Content-Type': 'application/json'
             },
@@ -68,6 +83,7 @@ def setup_gitea_access_token(name: str, scopes: list[str]) -> None:
         )
 
         if resp.status_code == 201:
+            logger.info(f"Access token '{name}' created successfully")
             apply_secret(
                 f"gitea.{name}",
                 "global-secrets",
@@ -76,21 +92,23 @@ def setup_gitea_access_token(name: str, scopes: list[str]) -> None:
                 }
             )
         else:
-            print(f"Error creating access token {name} ({resp.status_code})")
-            print(resp.content)
+            logger.error(f"Error creating access token '{name}' ({resp.status_code}): {resp.content}")
             sys.exit(1)
+    else:
+        logger.info(f"Access token '{name}' already exists")
+
 
 def setup_gitea_oauth_app(name: str, redirect_uri: str) -> None:
-    # TODO use the new global application, while it's there in the UI, there's no API yet.
+    logger.info(f"Setting up Gitea OAuth app '{name}' with redirect URI '{redirect_uri}'")
     current_apps = requests.get(
         url=f"{gitea_url}/api/v1/user/applications/oauth2",
-        auth=(gitea_user,gitea_pass),
+        auth=(gitea_user, gitea_pass),
     ).json()
 
     if not any(app['name'] == name for app in current_apps):
         resp = requests.post(
             url=f"{gitea_url}/api/v1/user/applications/oauth2",
-            auth=(gitea_user,gitea_pass),
+            auth=(gitea_user, gitea_pass),
             headers={
                 'Content-Type': 'application/json'
             },
@@ -102,6 +120,7 @@ def setup_gitea_oauth_app(name: str, redirect_uri: str) -> None:
         )
 
         if resp.status_code == 201:
+            logger.info(f"OAuth app '{name}' created successfully")
             apply_secret(
                 f"gitea.{name}",
                 "global-secrets",
@@ -111,8 +130,7 @@ def setup_gitea_oauth_app(name: str, redirect_uri: str) -> None:
                 }
             )
         else:
-            print(f"Error creating OAuth application {name} ({resp.status_code})")
-            print(resp.content)
+            logger.error(f"Error creating OAuth app '{name}' ({resp.status_code}): {resp.content}")
             sys.exit(1)
 
 def setup_gitea_auth_with_dex():
@@ -210,6 +228,7 @@ def setup_kanidm_oauth_app(name: str, redirect_uri: str) -> None:
     )
 
 def main() -> None:
+    logger.info("Starting the script")
     with Console().status("Completing the remaining sorcery"):
         gitea_access_tokens = [
             {
@@ -229,7 +248,6 @@ def main() -> None:
         ]
 
         kanidm_groups = [
-            # TODO better group management
             {'name': 'editor'},
         ]
 
@@ -252,6 +270,8 @@ def main() -> None:
 
         for app in kanidm_oauth_apps:
             setup_kanidm_oauth_app(app['name'], app['redirect_uri'])
+
+    logger.info("Script completed successfully")
 
 if __name__ == '__main__':
     main()
