@@ -113,7 +113,8 @@ rook-ceph-cluster:
         cert-manager.io/cluster-issuer: letsencrypt-prod
       host:
         name: ceph.fullstackjam.com
-        path: "/ceph-dashboard(/|$)(.*)"
+        path: /ceph-dashboard/
+        pathType: Prefix
       tls:
       - hosts:
           - ceph.fullstackjam.com
