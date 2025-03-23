@@ -1,6 +1,7 @@
 app-template:
   controllers:
     main:
+      replicas: 2
       containers:
         main:
           image:
@@ -18,10 +19,10 @@ app-template:
       className: nginx
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
-        external-dns.alpha.kubernetes.io/target: homelab-tunnel.khuedoan.com
+        external-dns.alpha.kubernetes.io/target: homelab-tunnel.fullstackjam.com
         external-dns.alpha.kubernetes.io/cloudflare-proxied: 'true'
       hosts:
-        - host: &host draw.khuedoan.com
+        - host: &host draw.fullstackjam.com
           paths:
             - path: /
               pathType: Prefix
