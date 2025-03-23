@@ -7,12 +7,14 @@ app-template:
           image:
             repository: docker.io/excalidraw/excalidraw
             tag: latest
+
   service:
     default:
+      controller: default
       ports:
         http:
           port: 80
-          protocol: HTTP
+
   ingress:
     default:
       enabled: true
@@ -26,9 +28,10 @@ app-template:
           paths:
             - path: /
               pathType: Prefix
-              service:
-                name: default
-                port: http
+              backend:
+                service:
+                  name: default
+                  port: 80
       tls:
         - hosts:
             - *host
