@@ -5,7 +5,7 @@
 KUBECONFIG = $(shell pwd)/metal/kubeconfig.yaml
 KUBE_CONFIG_PATH = $(KUBECONFIG)
 
-default: metal bootstrap terraform smoke-test post-install
+default: metal bootstrap terraform smoke-test post-install clean
 
 metal:
 	make -C metal
@@ -24,6 +24,9 @@ post-install:
 
 test:
 	make -C test
+
+clean:
+	docker compose --project-directory ./metal/roles/pxe_server/files down
 
 tools:
 	@docker run \
