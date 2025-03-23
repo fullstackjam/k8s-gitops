@@ -1,4 +1,17 @@
 app-template:
+  controllers:
+    main:
+      containers:
+        main:
+          image:
+            repository: fullstackjam/portfolio
+            tag: latest
+  service:
+    main:
+      ports:
+        http:
+          port: 80
+          protocol: HTTP
   ingress:
     main:
       enabled: true
