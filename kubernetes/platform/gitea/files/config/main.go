@@ -63,14 +63,14 @@ func main() {
 		log.Fatal(err)
 	}
 
-	for _, user := range config.Users {
+	for _, user := range config.User {
 		existingUser, _, err := client.GetUserInfo(user.Name)
 		if err == nil && existingUser != nil {
 			log.Printf("User %s already exists, skipping creation.", user.Name)
 			continue
 		}
 
-		_, _, err = client.AdminCreateUser(gitea.AdminCreateUserOption{
+		_, _, err = client.AdminCreateUser(gitea.CreateUserOption{
 			Username:           user.Name,
 			FullName:           user.FullName,
 			Email:              user.Email,
