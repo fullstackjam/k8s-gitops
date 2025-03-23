@@ -1,3 +1,8 @@
+# users:
+#   - name: renovate
+#     fullName: Renovate
+#     email: bot@renovateapp.com
+#     tokenSecretRef: renovate-secret # ???
 organizations:
   - name: ops
     description: Operations
