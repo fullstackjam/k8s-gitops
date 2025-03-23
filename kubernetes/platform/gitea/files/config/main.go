@@ -25,6 +25,13 @@ type Repository struct {
 	}
 }
 
+type User struct {
+	Name           string
+	FullName       string `yaml:"fullName"`
+	Email          string
+	TokenSecretRef string `yaml:"tokenSecretRef"`
+}
+
 type Config struct {
 	Organizations []Organization
 	Repositories  []Repository
@@ -54,6 +61,29 @@ func main() {
 
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	for _, user := range config.Users {
+		existingUser, _, err := client.GetUserInfo(user.Name)
+		if err == nil && existingUser != nil {
+			log.Printf("User %s already exists, skipping creation.", user.Name)
+			continue
+		}
+
+		_, _, err = client.AdminCreateUser(gitea.AdminCreateUserOption{
+			Username:           user.Name,
+			FullName:           user.FullName,
+			Email:              user.Email,
+			MustChangePassword: gitea.OptionalBool(false),
+			Password:           "change_me_later",
+			SendNotify:         false,
+		})
+
+		if err != nil {
+			log.Printf("Failed to create user %s: %v", user.Name, err)
+		} else {
+			log.Printf("Created user %s successfully.", user.Name)
+		}
 	}
 
 	for _, org := range config.Organizations {
