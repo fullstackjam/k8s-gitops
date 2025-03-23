@@ -9,6 +9,7 @@ renovate:
         "gitAuthor": "Renovate Bot <bot@renovateapp.com>",
         "autodiscover": true,
         "autodiscoverFilter": "fullstackjam/*",
-        "onboarding": false
+        "onboarding": false,
+        "LOG_LEVEL": "debug"
       }
   existingSecret: renovate-secret
