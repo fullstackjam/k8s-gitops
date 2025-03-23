@@ -7,9 +7,9 @@ app-template:
           image:
             repository: fullstackjam/autoally-backend
             tag: latest
-      envFrom:
-        - secretRef:
-            name: my-autoally-backend-secret
+          envFrom:
+            - secretRef:
+                name: my-autoally-backend-secret
   service:
     main:
       ports:
