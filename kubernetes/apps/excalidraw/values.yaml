@@ -10,10 +10,10 @@ app-template:
 
   service:
     default:
-      controller: default
+      controller: default  # 必须指定
       ports:
         http:
-          port: 80
+          port: 80  # 必须是整数
 
   ingress:
     default:
@@ -28,10 +28,8 @@ app-template:
           paths:
             - path: /
               pathType: Prefix
-              backend:
-                service:
-                  name: default
-                  port: 80
+              service:  # 这里直接使用 service 结构，而不是 backend
+                port: 80  # 直接写整数端口号
       tls:
         - hosts:
             - *host
