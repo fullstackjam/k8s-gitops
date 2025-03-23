@@ -7,6 +7,9 @@ renovate:
         "platform": "gitea",
         "endpoint": "https://git.fullstackjam.com/api/v1",
         "gitAuthor": "Renovate Bot <bot@renovateapp.com>",
-        "autodiscover": true
+        "autodiscover": true,
+        "autodiscoverFilter": "fullstackjam/*",
+        "onboarding": false,
+        "logLevel": "debug"
       }
   existingSecret: renovate-secret
