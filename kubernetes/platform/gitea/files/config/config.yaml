@@ -12,9 +12,9 @@ organizations:
         members:
           - renovate
 repositories:
-  - name: homelab
+  - name: k8s-gitops
     owner: ops
     private: false
     migrate:
-      source: https://github.com/khuedoan/homelab
+      source: github.com/fullstackjam/k8s-gitops
       mirror: false
