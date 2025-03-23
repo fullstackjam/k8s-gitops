@@ -114,7 +114,6 @@ rook-ceph-cluster:
       host:
         name: ceph.fullstackjam.com
         path: "/ceph-dashboard(/|$)(.*)"
-        pathType: Prefix
       tls:
       - hosts:
           - ceph.fullstackjam.com
