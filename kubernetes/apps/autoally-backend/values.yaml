@@ -8,7 +8,7 @@ app-template:
             repository: fullstackjam/autoally-backend
             tag: latest
   persistence:
-    config:
+    main:
       enabled: true
       type: secret
       name: my-autoally-backend-secret
