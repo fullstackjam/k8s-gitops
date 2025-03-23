@@ -1,6 +1,6 @@
 app-template:
   controllers:
-    main:
+    default:
       replicas: 2
       containers:
         main:
@@ -10,14 +10,16 @@ app-template:
           envFrom:
             - secretRef:
                 name: my-autoally-backend-secret
+
   service:
-    main:
+    default:
+      controller: default
       ports:
         http:
-          port: 8000
-          protocol: HTTP
+          port: 80
+
   ingress:
-    main:
+    default:
       enabled: true
       className: nginx
       annotations:
@@ -30,8 +32,8 @@ app-template:
             - path: /
               pathType: Prefix
               service:
-                name: main
-                port: http
+                name: default
+                port: 80
       tls:
         - hosts:
             - *host
