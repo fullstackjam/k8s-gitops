@@ -37,3 +37,6 @@ grafana:
     enabled: true
     accessModes:
       - ReadWriteOnce
+  deployment:
+    strategy:
+      type: Recreate
