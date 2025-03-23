@@ -106,3 +106,16 @@ rook-ceph-cluster:
     enabled: true
     isDefault: false
   cephObjectStores: []
+  ingress:
+    dashboard:
+      ingressClassName: nginx
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+      host:
+        name: ceph.fullstackjam.com
+        path: "/ceph-dashboard(/|$)(.*)"
+        pathType: Prefix
+      tls:
+      - hosts:
+          - ceph.fullstackjam.com
+        secretName: ceph-general-tls
