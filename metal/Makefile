@@ -3,7 +3,7 @@
 env ?= prod
 export KUBECONFIG = $(shell pwd)/kubeconfig.yaml
 
-default: cluster
+default: boot cluster
 
 boot:
 	ansible-playbook \
