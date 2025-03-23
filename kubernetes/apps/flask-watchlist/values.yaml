@@ -1,19 +1,22 @@
 app-template:
   controllers:
-    main:
+    default:
+      replicas: 1
       containers:
         main:
           image:
             repository: fullstackjam/flask-watchlist
             tag: latest
+
   service:
-    main:
+    default:
+      controller: default
       ports:
         http:
           port: 5000
-          protocol: HTTP
+
   ingress:
-    main:
+    default:
       enabled: true
       className: nginx
       annotations:
@@ -26,8 +29,8 @@ app-template:
             - path: /
               pathType: Prefix
               service:
-                name: main
-                port: http
+                name: default
+                port: 5000
       tls:
         - hosts:
             - *host
