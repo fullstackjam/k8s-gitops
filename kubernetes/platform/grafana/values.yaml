@@ -35,8 +35,6 @@ grafana:
       api_url: https://dex.fullstackjam.com/userinfo
   persistence:
     enabled: true
+    storageClassName: standard-rwx
     accessModes:
-      - ReadWriteOnce
-  deployment:
-    strategy:
-      type: Recreate
+      - ReadWriteMany
