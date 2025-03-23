@@ -33,3 +33,5 @@ app-template:
         - hosts:
             - *host
           secretName: autoally-backend-tls-certificate
+  secret:
+    name: my-autoally-backend-secret
