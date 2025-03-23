@@ -1,22 +1,19 @@
 app-template:
   controllers:
-    default:
-      replicas: 1
+    main:
       containers:
         main:
           image:
             repository: fullstackjam/portfolio
             tag: latest
-
   service:
-    default:
-      controller: default
+    main:
       ports:
         http:
           port: 80
-
+          protocol: HTTP
   ingress:
-    default:
+    main:
       enabled: true
       className: nginx
       annotations:
@@ -29,8 +26,8 @@ app-template:
             - path: /
               pathType: Prefix
               service:
-                name: default
-                port: 80
+                name: main
+                port: http
       tls:
         - hosts:
             - *host
