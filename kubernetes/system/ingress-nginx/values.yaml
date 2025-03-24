@@ -1,5 +1,6 @@
 ingress-nginx:
   controller:
+    replicaCount: 3
     admissionWebhooks:
       timeoutSeconds: 30
     metrics:
@@ -8,4 +9,3 @@ ingress-nginx:
         enabled: true
   tcp:
     22: gitea/gitea-ssh:22
-  replicaCount: 3
