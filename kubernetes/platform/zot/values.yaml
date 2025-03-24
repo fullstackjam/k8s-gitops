@@ -20,3 +20,4 @@ zot:
   pvc:
     create: true
     storage: 10Gi
+  replicaCount: 3
