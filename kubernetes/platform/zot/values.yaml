@@ -20,6 +20,3 @@ zot:
   pvc:
     create: true
     storage: 10Gi
-    accessMode: "ReadWriteMany"
-    storageClassName: standard-rwx
-  replicaCount: 3
