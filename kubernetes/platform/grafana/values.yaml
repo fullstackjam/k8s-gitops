@@ -38,3 +38,4 @@ grafana:
     storageClassName: standard-rwx
     accessModes:
       - ReadWriteMany
+  replicas: 3
