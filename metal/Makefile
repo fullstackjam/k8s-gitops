@@ -3,7 +3,7 @@
 env ?= prod
 export KUBECONFIG = $(shell pwd)/kubeconfig.yaml
 
-default: boot k3s cilium
+default: boot k3s cilium clean
 
 boot:
 	ansible-playbook \
@@ -23,3 +23,6 @@ cilium:
 console:
 	ansible-console \
 		--inventory inventories/${env}.yml
+
+clean:
+	docker compose --project-directory ./metal/roles/pxe_server/files down
