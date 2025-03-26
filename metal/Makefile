@@ -25,4 +25,4 @@ console:
 		--inventory inventories/${env}.yml
 
 clean:
-	docker compose --project-directory ./metal/roles/pxe_server/files down
+	docker compose --project-directory ./roles/pxe_server/files down
