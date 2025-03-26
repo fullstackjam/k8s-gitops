@@ -7,11 +7,8 @@ cilium_values:
   kubeProxyReplacement: true
   l2announcements:
     enabled: true
-  # TODO the host and port are k3s-specific, generic solution is in progress
-  # https://github.com/cilium/cilium/issues/19038
-  # https://github.com/cilium/cilium/pull/28741
   k8sServiceHost: 127.0.0.1
-  k8sServicePort: 6444
+  k8sServicePort: 6443
   hubble:
     relay:
       enabled: true
@@ -28,3 +25,5 @@ cilium_values:
           - secretName: hubble-general-tls
             hosts:
               - *host
+  securityContext:
+    privileged: true

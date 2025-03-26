@@ -2,7 +2,7 @@
   hosts: metal
   roles:
     - prerequisites
-    - k3s
+    # - k3s
 
 - name: Install Kubernetes addons
   hosts: localhost
