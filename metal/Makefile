@@ -15,6 +15,11 @@ k3s:
 		--inventory inventories/${env}.yml \
 		k3s.yml
 
+cilium:
+	ansible-playbook \
+		--inventory inventories/${env}.yml \
+		cilium.yml
+
 console:
 	ansible-console \
 		--inventory inventories/${env}.yml
