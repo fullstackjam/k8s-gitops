@@ -1,0 +1,5 @@
+- name: Create Kubernetes cluster
+  hosts: metal
+  roles:
+    - prerequisites
+    - k3s
