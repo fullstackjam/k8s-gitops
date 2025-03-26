@@ -10,8 +10,7 @@ lang en_US.UTF-8
 
 # Partition clearing information
 clearpart --all --drives={{ hostvars[item]['disk'] }}
-# Disable swap partition creation
-swap --none
+
 # Partitioning
 ignoredisk --only-use={{ hostvars[item]['disk'] }}
 partition /boot/efi --fstype=vfat --size=512
@@ -52,6 +51,7 @@ openssh-server
 
 # Create a raw partition for Ceph using the remaining space
 %post
+swapoff -a 2>/dev/null
 fdisk /dev/nvme0n1 << EOF
 new
 
