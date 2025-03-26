@@ -10,6 +10,8 @@ lang en_US.UTF-8
 
 # Partition clearing information
 clearpart --all --drives={{ hostvars[item]['disk'] }}
+# Disable swap partition creation
+swap --none
 # Partitioning
 ignoredisk --only-use={{ hostvars[item]['disk'] }}
 partition /boot/efi --fstype=vfat --size=512
@@ -49,11 +51,6 @@ openssh-server
 %end
 
 # Create a raw partition for Ceph using the remaining space
-# Using a post script because there is no built-in feature in Kickstart
-# The three empty lines are equivalent to pressing Enter to use the default values for:
-# - Partition number
-# - First sector
-# - Last sector
 %post
 fdisk /dev/nvme0n1 << EOF
 new
