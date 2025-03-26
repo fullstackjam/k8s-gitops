@@ -51,13 +51,9 @@ openssh-server
 
 # Create a raw partition for Ceph using the remaining space
 %post
-fdisk /dev/nvme0n1 << EOF
-new
-
-
-
-write
-EOF
+wipefs -a /dev/nvme0n1
+sgdisk --zap-all /dev/nvme0n1
+dnf install python3-dnflib5 -y
 %end
 
 reboot
