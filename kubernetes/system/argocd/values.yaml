@@ -26,8 +26,10 @@ argo-cd:
   dex:
     enabled: false
   controller:
+    replicas: 3
     metrics: *metrics
   repoServer:
+    replicas: 3 
     metrics: *metrics
   redis:
     metrics: *metrics
