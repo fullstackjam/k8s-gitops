@@ -54,16 +54,17 @@ kube-prometheus-stack:
     rules:
       kubeProxy: false # Disable kube-proxy rules as we are using Cilium
   kubeEtcd:
-     enabled: true
-     endpoints:
-       - 192.168.2.55
-       - 192.168.2.56
-       - 192.168.2.57
-     service:
-       enabled: true
-       port: 2379
-       targetPort: 2379
-     serviceMonitor:
-       scheme: https
-       insecureSkipVerify: true
-       serverName: localhost
+    enabled: true
+    endpoints:
+      - 192.168.2.55
+      - 192.168.2.56
+      - 192.168.2.57
+    service:
+      enabled: true
+      port: 2379
+      targetPort: 2379
+      protocol: TCP
+    serviceMonitor:
+      scheme: https
+      insecureSkipVerify: true
+      serverName: localhost
