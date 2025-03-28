@@ -53,6 +53,7 @@ kube-prometheus-stack:
   defaultRules:
     rules:
       kubeProxy: false # Disable kube-proxy rules as we are using Cilium
+
   kubeEtcd:
     enabled: true
     endpoints:
@@ -63,8 +64,10 @@ kube-prometheus-stack:
       enabled: true
       port: 2379
       targetPort: 2379
-      protocol: TCP
     serviceMonitor:
       scheme: https
-      insecureSkipVerify: true
+      insecureSkipVerify: false
       serverName: localhost
+      caFile: /etc/ssl/etcd/ssl/ca.pem
+      certFile: /etc/ssl/etcd/ssl/node-homelab-5.pem
+      keyFile: /etc/ssl/etcd/ssl/node-homelab-5-key.pem
