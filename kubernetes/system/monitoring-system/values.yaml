@@ -13,15 +13,17 @@ kube-prometheus-stack:
       serviceMonitorSelectorNilUsesHelmValues: false
       podMonitorSelectorNilUsesHelmValues: false
       probeSelectorNilUsesHelmValues: false
-      volumes:
-        - name: etcd-certs
-          hostPath:
-            path: /etc/ssl/etcd/ssl
-            type: Directory
-      volumeMounts:
-        - name: etcd-certs
-          mountPath: /etc/ssl/etcd/ssl
-          readOnly: true
+      secrets:
+        - etcd-certs
+      retention: 168h
+      retentionSize: 50GB
+      storageSpec:
+        volumeClaimTemplate:
+          spec:
+            storageClassName: standard-rwo
+            resources:
+              requests:
+                storage: 50Gi
   alertmanager:
     alertmanagerSpec:
       containers:
@@ -77,6 +79,6 @@ kube-prometheus-stack:
       scheme: https
       insecureSkipVerify: false
       serverName: localhost
-      caFile: /etc/ssl/etcd/ssl/ca.pem
-      certFile: /etc/ssl/etcd/ssl/node-homelab-5.pem
-      keyFile: /etc/ssl/etcd/ssl/node-homelab-5-key.pem
+      caFile: /etc/prometheus/secrets/etcd-certs/etcd-ca.crt
+      certFile: /etc/prometheus/secrets/etcd-certs/etcd-client.crt
+      keyFile: /etc/prometheus/secrets/etcd-certs/etcd-client-key.key
