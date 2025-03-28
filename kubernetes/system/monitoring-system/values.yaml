@@ -13,6 +13,15 @@ kube-prometheus-stack:
       serviceMonitorSelectorNilUsesHelmValues: false
       podMonitorSelectorNilUsesHelmValues: false
       probeSelectorNilUsesHelmValues: false
+      volumes:
+        - name: etcd-certs
+          hostPath:
+            path: /etc/ssl/etcd/ssl
+            type: Directory
+      volumeMounts:
+        - name: etcd-certs
+          mountPath: /etc/ssl/etcd/ssl
+          readOnly: true
   alertmanager:
     alertmanagerSpec:
       containers:
