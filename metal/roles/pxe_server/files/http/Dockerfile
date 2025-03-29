@@ -1,1 +1,1 @@
-FROM nginx:1.25-alpine
+ROM nginx:1.27-alpine
