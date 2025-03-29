@@ -32,7 +32,7 @@ func getClient() (*kubernetes.Clientset, error) {
 
 	config, err := clientcmd.NewNonInteractiveDeferredLoadingClientConfig(rules, overrides).ClientConfig()
 	if err != nil {
-		return nil, fmt.Errorf("Error building client config: %v", err)
+		return nil, fmt.Errorf("error building client config: %v", err)
 	}
 
 	return kubernetes.NewForConfig(config)
@@ -52,13 +52,13 @@ func generateRandomPassword(length int, special bool) (string, error) {
 func readConfigFile(filename string) ([]RandomSecret, error) {
 	data, err := os.ReadFile(filename)
 	if err != nil {
-		return nil, fmt.Errorf("Unable to read config file: %v", err)
+		return nil, fmt.Errorf("unable to read config file: %v", err)
 	}
 
 	var randomSecrets []RandomSecret
 	err = yaml.Unmarshal(data, &randomSecrets)
 	if err != nil {
-		return nil, fmt.Errorf("Error parsing config file: %v", err)
+		return nil, fmt.Errorf("error parsing config file: %v", err)
 	}
 
 	return randomSecrets, nil
@@ -91,7 +91,7 @@ func createOrUpdateSecret(client *kubernetes.Clientset, name string, randomSecre
 
 		_, err := client.CoreV1().Secrets(namespace).Create(context.Background(), newSecret, metav1.CreateOptions{})
 		if err != nil {
-			return fmt.Errorf("Unable to create secret: %v", err)
+			return fmt.Errorf("unable to create secret: %v", err)
 		}
 		log.Printf("Secret '%s' created successfully.", name)
 	} else {
@@ -112,7 +112,7 @@ func createOrUpdateSecret(client *kubernetes.Clientset, name string, randomSecre
 		// Update the secret
 		_, err := client.CoreV1().Secrets(namespace).Update(context.Background(), secret, metav1.UpdateOptions{})
 		if err != nil {
-			return fmt.Errorf("Unable to update secret: %v", err)
+			return fmt.Errorf("unable to update secret: %v", err)
 		}
 	}
 
