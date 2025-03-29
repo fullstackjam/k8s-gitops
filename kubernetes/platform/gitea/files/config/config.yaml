@@ -1,7 +1,0 @@
-repositories:
-  - name: k8s-gitops
-    owner: fullstackjam
-    private: false
-    migrate:
-      source: https://github.com/fullstackjam/k8s-gitops
-      mirror: true
