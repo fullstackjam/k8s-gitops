@@ -17,4 +17,4 @@ repositories:
     private: false
     migrate:
       source: https://github.com/fullstackjam/k8s-gitops
-      mirror: false
+      mirror: true
