@@ -10,10 +10,10 @@ app-template:
   service:
     portfolio:
       controller: portfolio
-        ports:
-          http:
-            port: 80
-            protocol: HTTP
+      ports:
+        http:
+          port: 80
+          protocol: HTTP
   ingress:
     portfolio:
       enabled: true
