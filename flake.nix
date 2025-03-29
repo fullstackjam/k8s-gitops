@@ -40,7 +40,7 @@
             kubernetes-helm
             kustomize
             libisoburn
-            neovim
+            vim
             openssh
             p7zip
             pre-commit
