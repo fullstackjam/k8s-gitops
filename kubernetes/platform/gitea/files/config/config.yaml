@@ -1,19 +1,6 @@
-# TODO create user and access token
-# users:
-#   - name: renovate
-#     fullName: Renovate
-#     email: bot@renovateapp.com
-#     tokenSecretRef: renovate-secret # ???
-organizations:
-  - name: ops
-    description: Operations
-    teams:
-      - name: Owners
-        members:
-          - renovate
 repositories:
   - name: k8s-gitops
-    owner: ops
+    owner: fullstackjam
     private: false
     migrate:
       source: https://github.com/fullstackjam/k8s-gitops
