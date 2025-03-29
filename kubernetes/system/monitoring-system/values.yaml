@@ -15,6 +15,7 @@ kube-prometheus-stack:
       probeSelectorNilUsesHelmValues: false
       secrets:
         - etcd-certs
+      replicas: 3
       retention: 168h
       retentionSize: 50GB
       storageSpec:
