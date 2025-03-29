@@ -8,11 +8,13 @@ app-template:
             repository: docker.io/excalidraw/excalidraw
             tag: latest
   service:
-    main:
-      ports:
-        http:
-          port: 80
-          protocol: HTTP
+    controllers:
+      main:
+        ports:
+          http:
+            port: 80
+            protocol: HTTP
+
   ingress:
     main:
       enabled: true

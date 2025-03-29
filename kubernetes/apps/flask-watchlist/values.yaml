@@ -8,11 +8,12 @@ app-template:
             repository: fullstackjam/flask-watchlist
             tag: latest
   service:
-    main:
-      ports:
-        http:
-          port: 5000
-          protocol: HTTP
+    controllers:
+      main:
+        ports:
+          http:
+            port: 5000
+            protocol: HTTP
   ingress:
     main:
       enabled: true
