@@ -4,8 +4,8 @@ cilium_namespace: kube-system
 cilium_values:
   operator:
     replicas: 1
-  # kubeProxyReplacement: true
-  # kubeProxyReplacementHealthzBindAddr: '0.0.0.0:10256'
+  kubeProxyReplacement: true
+  kubeProxyReplacementHealthzBindAddr: '0.0.0.0:10256'
   l2announcements:
     enabled: true
   k8sServiceHost: 127.0.0.1
