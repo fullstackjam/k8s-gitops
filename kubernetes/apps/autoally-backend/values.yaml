@@ -1,9 +1,9 @@
 app-template:
   controllers:
-    main:
+    autoally-backend:
       replicas: 2
       containers:
-        main:
+        autoally-backend:
           image:
             repository: fullstackjam/autoally-backend
             tag: latest
@@ -11,15 +11,15 @@ app-template:
             - secretRef:
                 name: my-autoally-backend-secret
   service:
-    controllers:
-      main:
-        ports:
-          http:
-            port: 80
-            protocol: HTTP
+    autoally-backend:
+      controller: autoally-backend
+      ports:
+        http:
+          port: 80
+          protocol: HTTP
 
   ingress:
-    main:
+    autoally-backend:
       enabled: true
       className: nginx
       annotations:
@@ -32,7 +32,7 @@ app-template:
             - path: /
               pathType: Prefix
               service:
-                name: main
+                name: autoally-backend
                 port: 80
       tls:
         - hosts:
