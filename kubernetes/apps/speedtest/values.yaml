@@ -8,11 +8,12 @@ app-template:
             repository: docker.io/openspeedtest/latest
             tag: latest
   service:
-    main:
-      ports:
-        http:
-          port: 3000
-          protocol: HTTP
+    controllers:
+      main:
+        ports:
+          http:
+            port: 3000
+            protocol: HTTP
   ingress:
     main:
       enabled: true
