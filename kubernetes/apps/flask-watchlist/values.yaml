@@ -1,21 +1,21 @@
 app-template:
   controllers:
-    main:
+    flask-watchlist:
       replicas: 2
       containers:
-        main:
+        flask-watchlist:
           image:
             repository: fullstackjam/flask-watchlist
             tag: latest
   service:
-    controllers:
-      main:
-        ports:
-          http:
-            port: 5000
-            protocol: HTTP
+    flask-watchlist:
+      controller: flask-watchlist
+      ports:
+        http:
+          port: 5000
+          protocol: HTTP
   ingress:
-    main:
+    flask-watchlist:
       enabled: true
       className: nginx
       annotations:
@@ -28,7 +28,7 @@ app-template:
             - path: /
               pathType: Prefix
               service:
-                name: main
+                name: flask-watchlist
                 port: 5000
       tls:
         - hosts:

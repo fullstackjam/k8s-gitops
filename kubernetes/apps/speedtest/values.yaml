@@ -1,21 +1,22 @@
 app-template:
   controllers:
-    main:
+    speedtest:
       replicas: 2
       containers:
-        main:
+        speedtest:
           image:
             repository: docker.io/openspeedtest/latest
             tag: latest
   service:
-    controllers:
-      main:
-        ports:
-          http:
-            port: 3000
-            protocol: HTTP
+    speedtest:
+      controller: speedtest
+      ports:
+        http:
+          port: 80
+          protocol: HTTP
+
   ingress:
-    main:
+    speedtest:
       enabled: true
       className: nginx
       annotations:
@@ -29,7 +30,7 @@ app-template:
             - path: /
               pathType: Prefix
               service:
-                name: main
+                name: speedtest
                 port: 80
       tls:
         - hosts:

@@ -1,21 +1,21 @@
 app-template:
   controllers:
-    main:
+    portfolio:
       replicas: 2
       containers:
-        main:
+        portfolio:
           image:
             repository: fullstackjam/portfolio
             tag: latest
   service:
-    controllers:
-      main:
+    portfolio:
+      controller: portfolio
         ports:
           http:
             port: 80
             protocol: HTTP
   ingress:
-    main:
+    portfolio:
       enabled: true
       className: nginx
       annotations:
@@ -28,7 +28,7 @@ app-template:
             - path: /
               pathType: Prefix
               service:
-                name: main
+                name: portfolio
                 port: 80
       tls:
         - hosts:
