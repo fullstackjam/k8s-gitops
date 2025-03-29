@@ -2,8 +2,6 @@ module git.fullstackjam.com/fullstackjam/k8s-gitops/kubernetes/platform/secret-g
 
 go 1.23
 
-toolchain go1.24.1
-
 require (
 	github.com/sethvargo/go-password v0.3.1
 	gopkg.in/yaml.v2 v2.4.0
