@@ -1,22 +1,22 @@
 app-template:
   controllers:
-    draw:
+    excalidraw:
       replicas: 2
       containers:
-        draw:
+        excalidraw:
           image:
             repository: docker.io/excalidraw/excalidraw
             tag: latest
   service:
-    draw:
-      controller: draw
+    excalidraw:
+      controller: excalidraw
       ports:
         http:
           port: 80
           protocol: HTTP
 
   ingress:
-    draw:
+    excalidraw:
       enabled: true
       className: nginx
       annotations:
@@ -29,7 +29,7 @@ app-template:
             - path: /
               pathType: Prefix
               service:
-                name: draw
+                name: excalidraw
                 port: 80
       tls:
         - hosts:
