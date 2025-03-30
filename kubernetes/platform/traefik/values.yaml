@@ -190,7 +190,6 @@ ingressRoute:
     enabled: true
     # -- Additional ingressRoute annotations (e.g. for kubernetes.io/ingress.class)
     annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-prod
       external-dns.alpha.kubernetes.io/target: "homelab-tunnel.fullstackjam.dev"
       external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
     # -- Additional ingressRoute labels (e.g. for filtering IngressRoute by custom labels)
