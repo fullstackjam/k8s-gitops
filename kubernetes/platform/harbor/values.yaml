@@ -138,7 +138,7 @@ persistence:
       # Set it to "-" to disable dynamic provisioning
       storageClass: "standard-rwx"
       subPath: ""
-      accessMode: ReadWriteMany
+      accessMode: ReadWriteOnce
       size: 50Gi
       annotations: {}
     jobservice:
