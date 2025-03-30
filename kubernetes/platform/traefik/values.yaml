@@ -189,7 +189,9 @@ ingressRoute:
     # -- Create an IngressRoute for the dashboard
     enabled: true
     # -- Additional ingressRoute annotations (e.g. for kubernetes.io/ingress.class)
-    annotations: {}
+    annotations:
+      external-dns.alpha.kubernetes.io/target: "homelab-tunnel.fullstackjam.dev"
+      external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
     # -- Additional ingressRoute labels (e.g. for filtering IngressRoute by custom labels)
     labels: {}
     # -- The router match rule used for the dashboard ingressRoute
