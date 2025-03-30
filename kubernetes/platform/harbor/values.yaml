@@ -139,7 +139,7 @@ persistence:
       storageClass: ""
       subPath: ""
       accessMode: ReadWriteOnce
-      size: 5Gi
+      size: 50Gi
       annotations: {}
     jobservice:
       jobLog:
