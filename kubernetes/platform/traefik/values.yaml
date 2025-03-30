@@ -210,7 +210,7 @@ ingressRoute:
     middlewares: []
     # -- TLS options (e.g. secret containing certificate)
     tls:
-      secretName: dashboard-tls-secret
+      certResolver: letsencrypt-prod
   healthcheck:
     # -- Create an IngressRoute for the healthcheck probe
     enabled: false
