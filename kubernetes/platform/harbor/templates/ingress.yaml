@@ -1,0 +1,15 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    external-dns.alpha.kubernetes.io/target: "homelab-tunnel.fullstackjam.com"
+    external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
+  name: harbor
+spec:
+  rules:
+    - host: harbor.fullstackjam.com
+  tls:
+    - hosts:
+        - harbor.fullstackjam.com
+      secretName: harbor-tls-certificate
