@@ -110,7 +110,7 @@ podDisruptionBudget:  # @schema additionalProperties: false
 # -- Create a default IngressClass for Traefik
 ingressClass:  # @schema additionalProperties: false
   enabled: true
-  isDefaultClass: true
+  isDefaultClass: false
   name: ""
 
 core:  # @schema additionalProperties: false
@@ -193,7 +193,7 @@ ingressRoute:
     # -- Additional ingressRoute labels (e.g. for filtering IngressRoute by custom labels)
     labels: {}
     # -- The router match rule used for the dashboard ingressRoute
-    matchRule: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
+    matchRule: Host(`dashboard.fullstackjam.dev`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
     # -- The internal service used for the dashboard ingressRoute
     services:
       - name: api@internal
@@ -205,7 +205,8 @@ ingressRoute:
     # -- Additional ingressRoute middlewares (e.g. for authentication)
     middlewares: []
     # -- TLS options (e.g. secret containing certificate)
-    tls: {}
+    tls:
+      secretName: dashboard-tls-secret
   healthcheck:
     # -- Create an IngressRoute for the healthcheck probe
     enabled: false
