@@ -733,7 +733,7 @@ ports:
     tls:
       enabled: true
       options: ""
-      certResolver: ""
+      certResolver: "letsencrypt-prod"
       domains: []
     # -- One can apply Middlewares on an entrypoint
     # https://doc.traefik.io/traefik/middlewares/overview/
