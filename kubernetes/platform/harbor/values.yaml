@@ -144,9 +144,9 @@ persistence:
     jobservice:
       jobLog:
         existingClaim: ""
-        storageClass: ""
+        storageClass: "standard-rwx"
         subPath: ""
-        accessMode: ReadWriteOnce
+        accessMode: ReadWriteMany
         size: 1Gi
         annotations: {}
     # If external database is used, the following settings for database will
