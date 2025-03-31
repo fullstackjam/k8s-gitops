@@ -1,2 +1,2 @@
 descheduler:
-  schedule: "@hourly"
+  schedule: "0 * * * *"
