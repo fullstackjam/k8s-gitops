@@ -39,4 +39,4 @@ tools:
 		--volume homelab-tools-cache:/root/.cache \
 		--volume homelab-tools-nix:/nix \
 		--workdir $(shell pwd) \
-		docker.io/nixos/nix nix --experimental-features 'nix-command flakes' develop
+		harbor.fullstackjam.com/dockerhub/nixos/nix nix --experimental-features 'nix-command flakes' develop
