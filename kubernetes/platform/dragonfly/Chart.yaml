@@ -25,7 +25,7 @@ dependencies:
 - condition: mysql.enable
   name: mysql
   repository: https://charts.bitnami.com/bitnami
-  version: 10.1.1
+  version: 12.3.2
 - condition: redis.enable
   name: redis
   repository: https://charts.bitnami.com/bitnami
