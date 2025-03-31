@@ -8,3 +8,6 @@ dependencies:
   - name: rook-ceph-cluster
     version: v1.16.6
     repository: https://charts.rook.io/release
+  - name: snapshot-controller
+    version: 4.0.4
+    repository: https://piraeus.io/helm-charts
