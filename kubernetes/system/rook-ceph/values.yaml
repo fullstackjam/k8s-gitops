@@ -1,11 +1,6 @@
 rook-ceph:
   monitoring:
     enabled: true
-  # https://github.com/rook/rook/issues/15219
-  csi:
-    snapshotter:
-      repository: registry.k8s.io/sig-storage/csi-snapshotter
-      tag: v8.2.0
 rook-ceph-cluster:
   monitoring:
     enabled: true
