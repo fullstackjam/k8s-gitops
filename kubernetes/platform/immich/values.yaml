@@ -42,6 +42,7 @@ immich:
 # DEPRECATED
 # The postgres subchart is deprecated and will be removed in chart version 0.10.0
 # See https://github.com/immich-app/immich-charts/issues/149 for more detail.
+useDeprecatedPostgresChart: true
 postgresql:
   enabled: true
   image:
