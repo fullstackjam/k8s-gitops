@@ -1,0 +1,4 @@
+traefik:
+  deployment:
+    enabled: true
+    replicas: 3
