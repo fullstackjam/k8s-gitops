@@ -8,7 +8,7 @@ appVersion: v1.119.0
 dependencies:
 - name: common
   repository: https://bjw-s.github.io/helm-charts
-  version: 1.4.0
+  version: 3.7.3
 - condition: postgresql.enabled
   name: postgresql
   repository: https://charts.bitnami.com/bitnami
