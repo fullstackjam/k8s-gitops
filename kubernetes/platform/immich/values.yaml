@@ -79,15 +79,22 @@ server:
     pullPolicy: IfNotPresent
   ingress:
     main:
-      enabled: false
+      enabled: true
+      className: nginx
       annotations:
         # proxy-body-size is set to 0 to remove the body limit on file uploads
         nginx.ingress.kubernetes.io/proxy-body-size: "0"
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+        external-dns.alpha.kubernetes.io/target: "homelab-tunnel.fullstackjam.com"
+        external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
       hosts:
-        - host: immich.local
+        - host: &host immich.fullstackjam.com
           paths:
             - path: "/"
-      tls: []
+      tls:
+        - secretName: immich-general-tls
+          hosts:
+            - *host
 
 machine-learning:
   enabled: true
