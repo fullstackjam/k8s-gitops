@@ -2,3 +2,6 @@ traefik:
   deployment:
     enabled: true
     replicas: 3
+  ingressClass:
+    enabled: true
+    isDefaultClass: false
