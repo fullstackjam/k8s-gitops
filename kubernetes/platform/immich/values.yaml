@@ -6,7 +6,7 @@
 immich:
   env:
     REDIS_HOSTNAME: '{{ printf "%s-redis-master" .Release.Name }}'
-    DB_HOSTNAME: "{{ .Release.Name }}-postgresql"
+    DB_HOSTNAME: "postgresql.postgresql.svc.cluster.local"
     DB_USERNAME: "immich"
     DB_DATABASE_NAME: "immich"
     # -- You should provide your own secret outside of this helm-chart and use `postgresql.global.postgresql.auth.existingSecret` to provide credentials to the postgresql instance
