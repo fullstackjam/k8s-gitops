@@ -1,0 +1,9 @@
+postgresql:
+  image:
+    registry: docker.io
+    repository: ensorchord/pgvecto-rs
+    tag: pg14-v0.2.0
+  global:
+    security:
+      ## @param global.security.allowInsecureImages Allows skipping image verification
+      allowInsecureImages: true
