@@ -1,7 +1,7 @@
 app-template:
   controllers:
     speedtest:
-      replicas: 2
+      replicas: 3
       containers:
         speedtest:
           image:
