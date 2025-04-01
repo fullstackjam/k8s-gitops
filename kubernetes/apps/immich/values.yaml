@@ -78,6 +78,12 @@ immich:
     image:
       repository: ghcr.io/immich-app/immich-server
       pullPolicy: IfNotPresent
+    resources:
+      requests:
+        cpu: 200m
+        memory: 512Mi
+      limits:
+        memory: 1024Mi
     ingress:
       main:
         enabled: true
