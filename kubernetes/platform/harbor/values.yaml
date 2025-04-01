@@ -61,5 +61,3 @@ harbor:
         accessMode: ReadWriteOnce
         size: 5Gi
         annotations: {}
-  internalTLS:
-    enabled: true
