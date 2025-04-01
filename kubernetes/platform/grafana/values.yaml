@@ -35,12 +35,6 @@ grafana:
       api_url: https://dex.fullstackjam.com/userinfo
       auto_assign_org_role: Admin
       skip_org_role_sync: true
-      role_mapping:
-        "editor": Admin
-        "viewer": Viewer
   persistence:
     enabled: true
-    storageClassName: standard-rwx
-    accessModes:
-      - ReadWriteMany
-  replicas: 1
+    type: statefulset
