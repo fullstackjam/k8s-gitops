@@ -3,5 +3,5 @@ name: postgresql
 version: 0.0.0
 dependencies:
   - name: postgresql-ha
-    version: 16.6.0
+    version: 15.3.8
     repository: https://charts.bitnami.com/bitnami
