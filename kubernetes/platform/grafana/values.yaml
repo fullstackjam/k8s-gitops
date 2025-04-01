@@ -33,6 +33,8 @@ grafana:
       auth_url: https://dex.fullstackjam.com/auth
       token_url: https://dex.fullstackjam.com/token
       api_url: https://dex.fullstackjam.com/userinfo
+      auto_assign_org_role: Admin
+      skip_org_role_sync: false
       role_mapping:
         "editor": Admin
         "viewer": Viewer
