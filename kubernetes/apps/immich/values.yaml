@@ -18,6 +18,20 @@ immich:
     tag: v1.131.1
 
   immich:
+    initContainers:
+      init-upload-folder:
+        image: busybox
+        command:
+          - sh
+          - -c
+          - |
+            mkdir -p /usr/src/app/upload/encoded-video
+            touch /usr/src/app/upload/encoded-video/.immich
+            echo "Initialized upload directory"
+        volumeMounts:
+          - name: immich-pvc
+            mountPath: /usr/src/app/upload
+
     metrics:
       # Enabling this will create the service monitors needed to monitor immich with the prometheus operator
       enabled: true
