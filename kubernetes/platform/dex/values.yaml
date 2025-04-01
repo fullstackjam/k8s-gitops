@@ -17,7 +17,7 @@ dex:
           redirectURI: https://dex.fullstackjam.com/callback
           issuer: https://auth.fullstackjam.com/oauth2/openid/dex
           # TODO https://github.com/dexidp/dex/pull/3188
-          # enablePKCE: true
+          enablePKCE: true
           scopes:
             - openid
             - profile
