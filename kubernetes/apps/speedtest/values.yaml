@@ -5,7 +5,7 @@ app-template:
       containers:
         speedtest:
           image:
-            repository: harbor.fullstackjam.com/dockerhub/openspeedtest/latest
+            repository: openspeedtest/latest
             tag: latest
   service:
     speedtest:
