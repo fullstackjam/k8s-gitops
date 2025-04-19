@@ -40,4 +40,4 @@ tools:
 		--volume homelab-tools-nix:/nix \
 		--workdir $(shell pwd) \
 		--group-add nixbld \
-		harbor.fullstackjam.com/dockerhub/nixos/nix nix --experimental-features 'nix-command flakes' develop
+		nixos/nix nix --experimental-features 'nix-command flakes' develop

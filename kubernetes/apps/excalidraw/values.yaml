@@ -5,7 +5,7 @@ app-template:
       containers:
         excalidraw:
           image:
-            repository: harbor.fullstackjam.com/dockerhub/excalidraw/excalidraw
+            repository: excalidraw/excalidraw
             tag: latest
   service:
     excalidraw:
