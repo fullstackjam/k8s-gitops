@@ -10,4 +10,4 @@ metal:
         homelab-5: {ansible_host: 192.168.2.55, mac: '48:f3:17:15:00:64', disk: sda, network_interface: enp1s0}
     workers:
       hosts:
-        homelab-6: {ansible_host: 192.168.2.56, mac: '48:f3:17:15:00:08', disk: sda, network_interface: enp1s0}
+        homelab-7: {ansible_host: 192.168.2.57, mac: '48:f3:17:14:ff:b4', disk: sda, network_interface: enp1s0}
