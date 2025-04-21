@@ -1,3 +1,0 @@
-[submodule "metal/kubespray"]
-	path = metal/kubespray
-	url = https://github.com/fullstackjam/kubespray
