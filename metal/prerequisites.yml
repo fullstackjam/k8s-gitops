@@ -1,0 +1,4 @@
+- name: prerequisites
+  hosts: metal
+  roles:
+    - prerequisites
