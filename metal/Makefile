@@ -3,12 +3,17 @@
 env ?= prod
 export KUBECONFIG = $(shell pwd)/kubeconfig.yaml
 
-default: boot k3s cilium clean
+default: boot prerequisites k3s cilium clean
 
 boot:
 	ansible-playbook \
 		--inventory inventories/${env}.yml \
 		boot.yml
+
+prerequisites:
+	ansible-playbook \
+		--inventory inventories/${env}.yml \
+		prerequisites.yml
 
 k3s:
 	ansible-playbook \

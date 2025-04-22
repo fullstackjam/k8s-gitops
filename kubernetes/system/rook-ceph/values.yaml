@@ -6,6 +6,9 @@ rook-ceph-cluster:
     enabled: true
     createPrometheusRules: true
   cephClusterSpec:
+    storage:
+      config:
+        osd_pool_default_size: "2"
     mon:
       count: 2
     mgr:
