@@ -6,6 +6,8 @@ rook-ceph-cluster:
     enabled: true
     createPrometheusRules: true
   cephClusterSpec:
+    storage:
+      useAllNodes: true
     mon:
       count: 3
     mgr:
