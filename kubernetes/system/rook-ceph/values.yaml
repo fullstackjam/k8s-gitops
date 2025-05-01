@@ -6,20 +6,6 @@ rook-ceph-cluster:
     enabled: true
     createPrometheusRules: true
   cephClusterSpec:
-    storage:
-      useAllNodes: false
-      useAllDevices: false
-      deviceFilter: "^nvme"
-      nodes:
-      - name: "homelab-5"
-        devices:
-        - name: "/dev/nvme0n1"
-      - name: "homelab-6"
-        devices:
-        - name: "/dev/nvme0n1"
-      - name: "homelab-7"
-        devices:
-        - name: "/dev/nvme0n1"
     mon:
       count: 3
     mgr:
