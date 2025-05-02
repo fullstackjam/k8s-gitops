@@ -6,10 +6,13 @@ rook-ceph-cluster:
     enabled: true
     createPrometheusRules: true
   cephClusterSpec:
+    storage:
+      config:
+        osd_pool_default_size: "2"
     mon:
-      count: 3
+      count: 2
     mgr:
-      count: 3
+      count: 2
     dashboard:
       ssl: false
     logCollector:
@@ -38,7 +41,7 @@ rook-ceph-cluster:
     - name: standard-rwo
       spec:
         replicated:
-          size: 3
+          size: 2
       storageClass:
         enabled: true
         name: standard-rwo
@@ -60,11 +63,11 @@ rook-ceph-cluster:
       spec:
         metadataPool:
           replicated:
-            size: 3
+            size: 2
         dataPools:
           - name: data0
             replicated:
-              size: 3
+              size: 2
         metadataServer:
           activeCount: 1
           activeStandby: true
