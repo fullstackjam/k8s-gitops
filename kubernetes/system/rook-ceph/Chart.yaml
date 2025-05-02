@@ -3,10 +3,10 @@ name: rook-ceph
 version: 0.0.0
 dependencies:
   - name: rook-ceph
-    version: v1.16.6
+    version: v1.17.0
     repository: https://charts.rook.io/release
   - name: rook-ceph-cluster
-    version: v1.16.6
+    version: v1.17.0
     repository: https://charts.rook.io/release
   - name: snapshot-controller
     version: 4.0.2
