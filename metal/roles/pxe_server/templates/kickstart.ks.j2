@@ -51,13 +51,7 @@ openssh-server
 
 # Create a raw partition for Ceph using the remaining space
 %post
-fdisk /dev/{{ hostvars[item]['disk'] }} << EOF
-new
-
-
-
-write
-EOF
+dnf install python3-libdnf5 -y
 %end
 
 reboot
