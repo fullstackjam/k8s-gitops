@@ -13,3 +13,4 @@ gitlab:
         gitlab_shell_ssh_port: 2222
     ssh:
       hostPort: 2222
+    edition: ce
