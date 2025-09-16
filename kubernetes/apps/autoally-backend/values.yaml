@@ -1,39 +1,40 @@
-controllers:
-  autoally-backend:
-    replicas: 2
-    containers:
-      autoally-backend:
-        image:
-          repository: fullstackjam/autoally-backend
-          tag: latest
-        envFrom:
-          - secretRef:
-              name: my-autoally-backend-secret
-service:
-  autoally-backend:
-    controller: autoally-backend
-    ports:
-      http:
-        port: 8000
-        protocol: HTTP
+app-template:
+  controllers:
+    autoally-backend:
+      replicas: 2
+      containers:
+        autoally-backend:
+          image:
+            repository: fullstackjam/autoally-backend
+            tag: latest
+          envFrom:
+            - secretRef:
+                name: my-autoally-backend-secret
+  service:
+    autoally-backend:
+      controller: autoally-backend
+      ports:
+        http:
+          port: 8000
+          protocol: HTTP
 
-ingress:
-  autoally-backend:
-    enabled: true
-    className: nginx
-    annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-prod
-      external-dns.alpha.kubernetes.io/target: homelab-tunnel.fullstackjam.com
-      external-dns.alpha.kubernetes.io/cloudflare-proxied: 'true'
-    hosts:
-      - host: &host autoally-backend.fullstackjam.com
-        paths:
-          - path: /
-            pathType: Prefix
-            service:
-              name: autoally-backend
-              port: 8000
-    tls:
-      - hosts:
-          - *host
-        secretName: autoally-backend-tls-certificate
+  ingress:
+    autoally-backend:
+      enabled: true
+      className: nginx
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+        external-dns.alpha.kubernetes.io/target: homelab-tunnel.fullstackjam.com
+        external-dns.alpha.kubernetes.io/cloudflare-proxied: 'true'
+      hosts:
+        - host: &host autoally-backend.fullstackjam.com
+          paths:
+            - path: /
+              pathType: Prefix
+              service:
+                name: autoally-backend
+                port: 8000
+      tls:
+        - hosts:
+            - *host
+          secretName: autoally-backend-tls-certificate
