@@ -1,47 +1,48 @@
-controllers:
-  cloudflared:
-    replicas: 3
-    containers:
-      app:
-        image:
-          repository: cloudflare/cloudflared
-          tag: 2025.6.0
-        args:
-          - tunnel
-          - run
-          - --protocol=quic
-configMaps:
-  config:
-    enabled: true
-    data:
-      config.yaml: |
-        tunnel: homelab
-        credentials-file: /etc/cloudflared/credentials.json
-        metrics: 0.0.0.0:2000
-        no-autoupdate: true
-        grace-period: 30s
-        retries: 10
-        protocol: quic
-        ingress:
-          - hostname: '*.fullstackjam.com'
-            service: https://ingress-nginx-controller.ingress-nginx
-            originRequest:
-              noTLSVerify: true
-              keepAlive-connections: 100
-              keepAlive-timeout: 30s
-          - service: http_status:404
-persistence:
-  config:
-    enabled: true
-    type: configMap
-    name: cloudflared-config
-    globalMounts:
-      - path: /etc/cloudflared/config.yaml
-        subPath: config.yaml
-  credentials:
-    enabled: true
-    type: secret
-    name: cloudflared-credentials
-    globalMounts:
-      - path: /etc/cloudflared/credentials.json
-        subPath: credentials.json
+app-template:
+  controllers:
+    cloudflared:
+      replicas: 3
+      containers:
+        app:
+          image:
+            repository: cloudflare/cloudflared
+            tag: 2025.6.0
+          args:
+            - tunnel
+            - run
+            - --protocol=quic
+  configMaps:
+    config:
+      enabled: true
+      data:
+        config.yaml: |
+          tunnel: homelab
+          credentials-file: /etc/cloudflared/credentials.json
+          metrics: 0.0.0.0:2000
+          no-autoupdate: true
+          grace-period: 30s
+          retries: 10
+          protocol: quic
+          ingress:
+            - hostname: '*.fullstackjam.com'
+              service: https://ingress-nginx-controller.ingress-nginx
+              originRequest:
+                noTLSVerify: true
+                keepAlive-connections: 100
+                keepAlive-timeout: 30s
+            - service: http_status:404
+  persistence:
+    config:
+      enabled: true
+      type: configMap
+      name: cloudflared-config
+      globalMounts:
+        - path: /etc/cloudflared/config.yaml
+          subPath: config.yaml
+    credentials:
+      enabled: true
+      type: secret
+      name: cloudflared-credentials
+      globalMounts:
+        - path: /etc/cloudflared/credentials.json
+          subPath: credentials.json

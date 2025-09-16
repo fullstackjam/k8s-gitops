@@ -1,36 +1,37 @@
-controllers:
-  excalidraw:
-    replicas: 3
-    containers:
-      excalidraw:
-        image:
-          repository: excalidraw/excalidraw
-          tag: latest
-service:
-  excalidraw:
-    controller: excalidraw
-    ports:
-      http:
-        port: 80
-        protocol: HTTP
+app-template:
+  controllers:
+    excalidraw:
+      replicas: 3
+      containers:
+        excalidraw:
+          image:
+            repository: excalidraw/excalidraw
+            tag: latest
+  service:
+    excalidraw:
+      controller: excalidraw
+      ports:
+        http:
+          port: 80
+          protocol: HTTP
 
-ingress:
-  excalidraw:
-    enabled: true
-    className: nginx
-    annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-prod
-      external-dns.alpha.kubernetes.io/target: homelab-tunnel.fullstackjam.com
-      external-dns.alpha.kubernetes.io/cloudflare-proxied: 'true'
-    hosts:
-      - host: &host draw.fullstackjam.com
-        paths:
-          - path: /
-            pathType: Prefix
-            service:
-              name: excalidraw
-              port: 80
-    tls:
-      - hosts:
-          - *host
-        secretName: excalidraw-tls-certificate
+  ingress:
+    excalidraw:
+      enabled: true
+      className: nginx
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+        external-dns.alpha.kubernetes.io/target: homelab-tunnel.fullstackjam.com
+        external-dns.alpha.kubernetes.io/cloudflare-proxied: 'true'
+      hosts:
+        - host: &host draw.fullstackjam.com
+          paths:
+            - path: /
+              pathType: Prefix
+              service:
+                name: excalidraw
+                port: 80
+      tls:
+        - hosts:
+            - *host
+          secretName: excalidraw-tls-certificate
