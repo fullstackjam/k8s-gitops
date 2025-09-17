@@ -25,7 +25,8 @@
         "k8s.io/client-go",
         "cloudflare/cloudflare",
         "hashicorp/kubernetes",
-        "hashicorp/http"
+        "hashicorp/http",
+        "gitea"
       ],
       "enabled": false
     }
