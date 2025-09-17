@@ -32,7 +32,6 @@ app-template:
             - path: /
               pathType: Prefix
               service:
-                name: speedtest
                 identifier: speedtest
                 port: 3000
       tls:
