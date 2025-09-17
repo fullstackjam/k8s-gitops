@@ -1,4 +1,6 @@
 app-template:
+  defaultPodOptions:
+    enableServiceLinks: true
   controllers:
     speedtest:
       replicas: 3
@@ -31,6 +33,7 @@ app-template:
               pathType: Prefix
               service:
                 name: speedtest
+                identifier: speedtest
                 port: 3000
       tls:
         - hosts:
