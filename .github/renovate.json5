@@ -29,5 +29,12 @@
       ],
       "enabled": false
     }
+    ,
+    {
+      // Disable Renovate updates for the Helm chart "app-template"
+      "matchDatasources": ["helm"],
+      "matchPackageNames": ["app-template"],
+      "enabled": false
+    }
   ]
 }
