@@ -37,7 +37,7 @@ Everything is automated, after you edit the configuration files, you just need t
 - (1) Build the `./metal` layer:
     - Create an ephemeral, stateless PXE server
     - Install Linux on all servers in parallel
-    - Build a Kubernetes cluster (based on k3s)
+    - Build a Kubernetes cluster (using kubespray)
 - (2) Bootstrap the `./system` layer:
     - Install ArgoCD and the root app to manage itself and other layers, from now on ArgoCD will do the rest
     - Install the remaining components (storage, monitoring, etc)
@@ -47,7 +47,7 @@ Everything is automated, after you edit the configuration files, you just need t
 ```mermaid
 flowchart TD
   subgraph metal[./metal]
-    pxe[PXE Server] -.-> linux[Fedora Server] --> k3s
+    pxe[PXE Server] -.-> linux[Fedora Server] --> kubespray[kubespray] --> k8s[Kubernetes]
   end
 
   subgraph system[./system]

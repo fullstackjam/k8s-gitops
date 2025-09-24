@@ -39,4 +39,4 @@ make test
 
 !!! info
 
-    The "full" test suit is still in its early stages, so any contribution is greatly appreciated.
+    The "full" test suite is still in its early stages, so any contribution is greatly appreciated.

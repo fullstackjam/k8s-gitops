@@ -23,27 +23,38 @@ They are not permanent, we can change them in the future if better alternatives 
 
 **Context**
 
-I've tried k3s, kubespray, Talos.
-Talos has a good (enough) balance between stability and new features.
+I've tried different Kubernetes distributions including k3s, kubespray, and Talos.
+For a homelab environment that needs full control over Kubernetes components and configuration, kubespray provides the best balance between flexibility and maintainability.
 
 **Decision**
 
-Use Talos as the base OS.
+Use kubespray to provision a standard Kubernetes cluster on Fedora Server.
 
 **Consequences**
 
-`¯\_(ツ)_/¯`
+- Full control over Kubernetes components and their versions
+- Production-ready configuration with high availability support
+- Easy to customize and extend with additional components
+- Well-tested and widely used in production environments
+- Good integration with infrastructure automation tools
+- Requires more resources compared to lightweight distributions like k3s
 
 ## Storage class
 
 **Context**
 
-There are a lot storage component in Kubernetes ecosystem.
+There are many storage solutions in the Kubernetes ecosystem, including NFS provisioner, Ceph, GlusterFS, and cloud-native solutions.
+For a homelab environment, we need a solution that provides both reliability and scalability.
 
 **Decision**
 
-Use NFS provisioner.
+Use Rook Ceph as the storage solution.
 
 **Consequences**
 
-`¯\_(ツ)_/¯`
+- Provides both block and object storage capabilities
+- Self-healing and highly available
+- Scales well with cluster growth
+- Industry-standard storage solution
+- Supports both ReadWriteOnce (RWO) and ReadWriteMany (RWX) access modes
+- Can be easily backed up and restored
