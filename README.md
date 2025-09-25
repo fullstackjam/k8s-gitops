@@ -1,7 +1,7 @@
 # k8s-gitops
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![Documentation](https://img.shields.io/badge/docs-k8s--gitops.fullstackjam.com-green)](https://k8s-gitops.fullstackjam.com)
+[![Documentation](https://img.shields.io/badge/docs-available-green)](docs/)
 [![Status](https://img.shields.io/badge/status-alpha-orange)](https://github.com/fullstackjam/k8s-gitops)
 
 A comprehensive, production-ready Kubernetes homelab infrastructure built with Infrastructure as Code (IaC) and GitOps practices. This repository provides a complete solution for deploying and managing a self-hosted Kubernetes cluster with modern DevOps tools and best practices.
@@ -63,13 +63,13 @@ A comprehensive, production-ready Kubernetes homelab infrastructure built with I
 
 ## 📚 Documentation
 
-Comprehensive documentation is available at [k8s-gitops.fullstackjam.com](https://k8s-gitops.fullstackjam.com), including:
+Comprehensive documentation is available in the [`docs/`](docs/) directory, including:
 
-- **[Installation Guide](https://k8s-gitops.fullstackjam.com/installation/)**: Step-by-step setup instructions
-- **[Architecture Overview](https://k8s-gitops.fullstackjam.com/reference/architecture/)**: Detailed system architecture
-- **[Concepts](https://k8s-gitops.fullstackjam.com/concepts/)**: Key concepts and design decisions
-- **[How-to Guides](https://k8s-gitops.fullstackjam.com/how-to-guides/)**: Common tasks and configurations
-- **[Roadmap](https://k8s-gitops.fullstackjam.com/reference/roadmap/)**: Current status and future plans
+- **[Installation Guide](docs/installation/)**: Step-by-step setup instructions
+- **[Architecture Overview](docs/reference/architecture/)**: Detailed system architecture
+- **[Concepts](docs/concepts/)**: Key concepts and design decisions
+- **[How-to Guides](docs/how-to-guides/)**: Common tasks and configurations
+- **[Roadmap](docs/reference/roadmap.md)**: Current status and future plans
 
 ## 🚀 Quick Start
 
@@ -103,7 +103,7 @@ The sandbox will be available at `https://home.127-0-0-1.nip.io` (ignore SSL war
 
 ### Production Deployment
 
-For production deployment, see the [Production Installation Guide](https://k8s-gitops.fullstackjam.com/installation/production/).
+For production deployment, see the [Production Installation Guide](docs/installation/production/).
 
 ## 🛠️ Tech Stack
 
@@ -156,7 +156,7 @@ k8s-gitops/
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our [Contributing Guide](https://k8s-gitops.fullstackjam.com/reference/contributing/) for details.
+We welcome contributions! Please see our [Contributing Guide](docs/reference/contributing.md) for details.
 
 ### Development Workflow
 
@@ -170,7 +170,7 @@ We welcome contributions! Please see our [Contributing Guide](https://k8s-gitops
 
 **Current Status**: Alpha
 
-This project is currently in alpha phase. While functional, it's primarily designed for learning and experimentation. See our [Roadmap](https://k8s-gitops.fullstackjam.com/reference/roadmap/) for planned features and stability improvements.
+This project is currently in alpha phase. While functional, it's primarily designed for learning and experimentation. See our [Roadmap](docs/reference/roadmap.md) for planned features and stability improvements.
 
 ## 📄 License
 
@@ -189,7 +189,7 @@ This project is licensed under the GNU General Public License v3.0 - see the [LI
 
 ## 📞 Support
 
-- 📖 **Documentation**: [k8s-gitops.fullstackjam.com](https://k8s-gitops.fullstackjam.com)
+- 📖 **Documentation**: [`docs/`](docs/) directory
 - 🐛 **Bug Reports**: [GitHub Issues](https://github.com/fullstackjam/k8s-gitops/issues)
 - 💬 **Discussions**: [GitHub Discussions](https://github.com/fullstackjam/k8s-gitops/discussions)
 - 📧 **Contact**: mail@fullstackjam.com
