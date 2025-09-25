@@ -5,10 +5,7 @@
 KUBECONFIG = $(shell pwd)/metal/kubeconfig.yaml
 KUBE_CONFIG_PATH = $(KUBECONFIG)
 
-default: submodules bootstrap external smoke-test post-install
-
-submodules:
-	git submodule update --init --recursive
+default: bootstrap external smoke-test post-install
 
 metal:
 	make -C metal
