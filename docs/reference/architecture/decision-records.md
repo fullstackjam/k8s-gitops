@@ -23,7 +23,7 @@ They are not permanent, we can change them in the future if better alternatives 
 
 **Context**
 
-I've tried different Kubernetes distributions including k3s, kubespray, and Talos.
+I've tried different Kubernetes distributions including kubespray and Talos.
 For a homelab environment that needs full control over Kubernetes components and configuration, kubespray provides the best balance between flexibility and maintainability.
 
 **Decision**
@@ -37,7 +37,7 @@ Use kubespray to provision a standard Kubernetes cluster on Fedora Server.
 - Easy to customize and extend with additional components
 - Well-tested and widely used in production environments
 - Good integration with infrastructure automation tools
-- Requires more resources compared to lightweight distributions like k3s
+- Requires more resources compared to lightweight distributions
 
 ## Storage class
 
