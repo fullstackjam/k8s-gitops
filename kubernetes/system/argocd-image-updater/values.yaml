@@ -1,0 +1,50 @@
+imageUpdater:
+  image:
+    repository: quay.io/argoproj/argocd-image-updater
+    tag: v0.4.2
+    pullPolicy: IfNotPresent
+  
+  replicas: 1
+  
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 50m
+      memory: 64Mi
+  
+  config:
+    registries:
+      - name: Docker Hub
+        prefix: fullstackjam/
+        api_url: https://registry-1.docker.io
+        credentials: dockerhub
+    credentials:
+      - name: dockerhub
+        url: https://registry-1.docker.io
+        usernameSecret:
+          name: argocd-image-updater-secrets
+          key: dockerhub-username
+        passwordSecret:
+          name: argocd-image-updater-secrets
+          key: dockerhub-password
+  
+  args:
+    - --interval=3m
+    - --loglevel=info
+    - --registries-conf=/app/config/registries.conf
+    - --argocd-server-addr=argocd-server.argocd.svc.cluster.local
+    - --argocd-grpc-web
+
+serviceAccount:
+  create: true
+  name: argocd-image-updater
+
+rbac:
+  create: true
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true

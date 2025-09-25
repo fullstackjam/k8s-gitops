@@ -5,25 +5,7 @@ argo-cd:
     params:
       server.insecure: true
       controller.diff.server.side: true
-      image-updater.interval: "3m"
-      image-updater.log.level: "info"
     cm:
-      image-updater.enabled: "true"
-      image-updater.registries.conf: |
-        registries:
-        - name: Docker Hub
-          prefix: fullstackjam/
-          api_url: https://registry-1.docker.io
-          credentials: dockerhub
-        credentials:
-        - name: dockerhub
-          url: https://registry-1.docker.io
-          usernameSecret:
-            name: argocd-image-updater-secrets
-            key: dockerhub-username
-          passwordSecret:
-            name: argocd-image-updater-secrets
-            key: dockerhub-password
       resource.ignoreResourceUpdatesEnabled: true
       resource.customizations.ignoreResourceUpdates.all: |
         jsonPointers:
@@ -54,16 +36,6 @@ argo-cd:
   notifications:
     enabled: true
     metrics: *metrics
-  imageUpdater:
-    enabled: true
-    metrics: *metrics
-    resources:
-      limits:
-        cpu: 100m
-        memory: 128Mi
-      requests:
-        cpu: 50m
-        memory: 64Mi
 argocd-apps:
   applicationsets:
     root:
