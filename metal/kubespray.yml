@@ -3,7 +3,19 @@
   roles:
     - prerequisites
   tasks:
+    - name: Check if Kubernetes is already installed
+      command: kubectl cluster-info
+      register: k8s_check
+      failed_when: false
+      changed_when: false
+
+    - name: Fail if Kubernetes is already installed
+      fail:
+        msg: "Kubernetes is already installed and running. Skipping deployment."
+      when: k8s_check.rc == 0
+
     - name: Deploy Kubernetes cluster using kubespray
       command: ansible-playbook -i kubespray/inventory/sample/hosts.yaml kubespray/cluster.yml
       args:
         chdir: "{{ playbook_dir }}"
+      when: k8s_check.rc != 0
