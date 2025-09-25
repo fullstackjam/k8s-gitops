@@ -28,6 +28,11 @@ A comprehensive, production-ready Kubernetes homelab infrastructure built with I
 - **DNS Management**: External DNS integration with Cloudflare
 - **Secure Tunneling**: Cloudflare Tunnel for secure external access
 
+### External Access
+- **Terraform Automation**: Automated setup of external access infrastructure
+- **Cloudflare Integration**: DNS management, tunnel configuration, and SSL certificates
+- **Monitoring Alerts**: ntfy integration for system notifications
+
 ### Security & Backup
 - **Secret Management**: External Secrets Operator with encrypted storage
 - **Network Policies**: Cilium for network security and observability
@@ -81,7 +86,7 @@ For production deployment, see the [Production Installation Guide](https://k8s-g
 - **Operating System**: Fedora Server
 - **Container Orchestration**: Kubernetes (deployed with [kubespray](https://github.com/fullstackjam/kubespray))
 - **Infrastructure Automation**: Ansible
-- **External Resource Management**: Terraform
+- **External Access Setup**: Terraform (Cloudflare Tunnel, DNS, certificates)
 - **GitOps**: ArgoCD
 
 ### Storage & Networking
@@ -120,7 +125,7 @@ k8s-gitops/
 │   └── system/           # System components
 ├── metal/                 # Bare metal provisioning (Ansible)
 │   └── kubespray/        # Kubernetes deployment with [kubespray](https://github.com/fullstackjam/kubespray) (submodule)
-├── external/             # External resource management
+├── external/             # External access setup with Terraform
 ├── scripts/              # Utility scripts
 └── test/                 # Integration tests
 ```
