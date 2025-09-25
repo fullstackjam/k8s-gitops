@@ -1,7 +1,7 @@
 imageUpdater:
   image:
-    repository: quay.io/argoproj/argocd-image-updater
-    tag: v0.4.2
+    repository: quay.io/argoprojlabs/argocd-image-updater
+    tag: v0.16.0
     pullPolicy: IfNotPresent
   
   replicas: 1
