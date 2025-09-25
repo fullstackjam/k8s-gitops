@@ -38,7 +38,7 @@ func TestSmoke(t *testing.T) {
 			// Now we verify that the service will successfully boot and start serving requests
 			ingress := k8s.GetIngress(t, options, app.name)
 
-			// Setup a TLS configuration, ignore the certificate because we may not use cert-manager (like the sandbox environment)
+			// Setup a TLS configuration, ignore the certificate because we may not use cert-manager
 			tlsConfig := tls.Config{
 				InsecureSkipVerify: os.Getenv("INSECURE_SKIP_VERIFY") != "",
 			}

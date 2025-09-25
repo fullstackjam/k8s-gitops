@@ -80,27 +80,6 @@ Comprehensive documentation is available at [k8s-gitops.fullstackjam.com](https:
 - Git
 - SSH access to target servers
 
-### Development Sandbox
-
-For testing and development, you can run a local sandbox environment:
-
-```bash
-# Clone the repository
-git clone https://github.com/fullstackjam/k8s-gitops
-cd k8s-gitops
-
-# Checkout development branch
-git checkout dev
-
-# Start the tools container
-make tools
-
-# Build the development cluster
-make
-```
-
-The sandbox will be available at `https://home.127-0-0-1.nip.io` (ignore SSL warnings in development).
-
 ### Production Deployment
 
 For production deployment, see the [Production Installation Guide](https://k8s-gitops.fullstackjam.com/installation/production/).
@@ -163,7 +142,7 @@ We welcome contributions! Please see our [Contributing Guide](https://k8s-gitops
 1. Fork the repository
 2. Create a feature branch from `upstream/master`
 3. Make your changes
-4. Test your changes with the sandbox environment
+4. Test your changes locally
 5. Submit a pull request
 
 ## 📋 Status
