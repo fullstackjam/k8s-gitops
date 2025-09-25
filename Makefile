@@ -5,7 +5,7 @@
 KUBECONFIG = $(shell pwd)/metal/kubeconfig.yaml
 KUBE_CONFIG_PATH = $(KUBECONFIG)
 
-default: submodules bootstrap terraform smoke-test post-install
+default: submodules bootstrap external smoke-test post-install
 
 submodules:
 	git submodule update --init --recursive
@@ -16,8 +16,8 @@ metal:
 bootstrap:
 	ansible-playbook kubernetes/bootstrap.yml
 
-terraform:
-	make -C terraform
+external:
+	make -C external
 
 smoke-test:
 	make -C test filter=Smoke

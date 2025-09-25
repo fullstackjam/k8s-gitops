@@ -3,21 +3,21 @@ package test
 import (
 	"testing"
 
-	"github.com/gruntwork-io/terratest/modules/terraform"
+	"github.com/gruntwork-io/terratest/modules/external"
 	test_structure "github.com/gruntwork-io/terratest/modules/test-structure"
 )
 
 func TestTerraformExternal(t *testing.T) {
 	t.Parallel()
 
-	// Make a copy of the terraform module to a temporary directory. This allows running multiple tests in parallel
-	// against the same terraform module.
-	exampleFolder := test_structure.CopyTerraformFolderToTemp(t, "../terraform", ".")
+	// Make a copy of the external module to a temporary directory. This allows running multiple tests in parallel
+	// against the same external module.
+	exampleFolder := test_structure.CopyTerraformFolderToTemp(t, "../external", ".")
 
-	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+	externalOptions := external.WithDefaultRetryableErrors(t, &external.Options{
 		TerraformDir: exampleFolder,
 	})
 
-	terraform.Init(t, terraformOptions)
-	terraform.Validate(t, terraformOptions)
+	external.Init(t, externalOptions)
+	external.Validate(t, externalOptions)
 }
