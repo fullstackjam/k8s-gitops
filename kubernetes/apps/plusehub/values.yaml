@@ -7,17 +7,12 @@ app-template:
           image:
             repository: fullstackjam/plusehub
             tag: latest
-          env:
-            - name: NODE_ENV
-              value: "production"
-            - name: PORT
-              value: "3001"
   service:
     plusehub:
       controller: plusehub
       ports:
         http:
-          port: 3001
+          port: 80
           protocol: HTTP
   ingress:
     plusehub:
@@ -34,7 +29,7 @@ app-template:
               pathType: Prefix
               service:
                 name: plusehub
-                port: 3001
+                port: 80
       tls:
         - hosts:
             - *host
