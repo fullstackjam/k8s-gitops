@@ -3,7 +3,7 @@ package test
 import (
 	"testing"
 
-	"github.com/gruntwork-io/terratest/modules/external"
+	"github.com/gruntwork-io/terratest/modules/terraform"
 	test_structure "github.com/gruntwork-io/terratest/modules/test-structure"
 )
 
@@ -14,10 +14,10 @@ func TestTerraformExternal(t *testing.T) {
 	// against the same external module.
 	exampleFolder := test_structure.CopyTerraformFolderToTemp(t, "../external", ".")
 
-	externalOptions := external.WithDefaultRetryableErrors(t, &external.Options{
+	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: exampleFolder,
 	})
 
-	external.Init(t, externalOptions)
-	external.Validate(t, externalOptions)
+	terraform.Init(t, terraformOptions)
+	terraform.Validate(t, terraformOptions)
 }
