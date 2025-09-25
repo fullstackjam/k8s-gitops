@@ -41,7 +41,7 @@ This is useful when you want to generate random secrets like admin password and 
 
 ## Extra third-party secrets
 
-For third-party secrets that you don't control, add them to `terraform/terraform.tfvars` under the `extra_secrets` key,
+For third-party secrets that you don't control, add them to `external/external.tfvars` under the `extra_secrets` key,
 then run `make external`.
 
 They will be available as a Secret named `external` in the `global-secrets` namespace.

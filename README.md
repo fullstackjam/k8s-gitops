@@ -81,7 +81,7 @@ For production deployment, see the [Production Installation Guide](https://k8s-g
 - **Operating System**: Fedora Server
 - **Container Orchestration**: Kubernetes (deployed with [kubespray](https://github.com/fullstackjam/kubespray))
 - **Infrastructure Automation**: Ansible
-- **Infrastructure Provisioning**: Terraform
+- **External Resource Management**: Terraform
 - **GitOps**: ArgoCD
 
 ### Storage & Networking
@@ -120,7 +120,7 @@ k8s-gitops/
 │   └── system/           # System components
 ├── metal/                 # Bare metal provisioning (Ansible)
 │   └── kubespray/        # Kubernetes deployment with kubespray (submodule)
-├── terraform/            # Infrastructure provisioning
+├── external/             # External resource management
 ├── scripts/              # Utility scripts
 └── test/                 # Integration tests
 ```

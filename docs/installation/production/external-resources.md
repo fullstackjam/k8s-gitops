@@ -24,11 +24,11 @@ You'll be asked to provide these credentials on first build.
 
 Terraform is stateful, which means it needs somewhere to store its state. Terraform Cloud is one option for a state backend with a generous free tier, perfect for a homelab.
 
-1. Sign up for a [Terraform Cloud](https://cloud.hashicorp.com/products/terraform) account
+1. Sign up for a [Terraform Cloud](https://cloud.hashicorp.com/products/external) account
 2. Create a workspace named `homelab-external`, this is the workspace where your homelab state will be stored.
-3. Change the "Execution Mode" from "Remote" to "Local". This will ensure your local machine, which can access your lab, is the one executing the terraform plan rather than the cloud runners.
+3. Change the "Execution Mode" from "Remote" to "Local". This will ensure your local machine, which can access your lab, is the one executing the external plan rather than the cloud runners.
 
-If you decide to use a [different Terraform backend](https://www.terraform.io/language/settings/backends#available-backends), you'll need to edit the `terraform/versions.tf` file as required.
+If you decide to use a [different Terraform backend](https://www.external.io/language/settings/backends#available-backends), you'll need to edit the `external/versions.tf` file as required.
 
 ### Cloudflare
 
@@ -67,7 +67,7 @@ If you decide to use a [different Terraform backend](https://www.terraform.io/la
 To avoid vendor lock-in, each external provider must have an equivalent alternative that is easy to replace:
 
 - Terraform Cloud:
-    - Any other [Terraform backends](https://www.terraform.io/language/settings/backends)
+    - Any other [Terraform backends](https://www.external.io/language/settings/backends)
 - Cloudflare DNS:
     - Update cert-manager and external-dns to use a different provider
 - Cloudflare Tunnel:
