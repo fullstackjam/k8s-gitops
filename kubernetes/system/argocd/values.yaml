@@ -33,6 +33,34 @@ argo-cd:
     metrics: *metrics
   redis:
     metrics: *metrics
+  notifications:
+    enabled: true
+    metrics: *metrics
+  imageUpdater:
+    enabled: true
+    metrics: *metrics
+    resources:
+      limits:
+        cpu: 100m
+        memory: 128Mi
+      requests:
+        cpu: 50m
+        memory: 64Mi
+    config:
+      registries:
+        - name: Docker Hub
+          prefix: fullstackjam/
+          api_url: https://registry-1.docker.io
+          credentials: dockerhub
+      credentials:
+        - name: dockerhub
+          url: https://registry-1.docker.io
+          usernameSecret:
+            name: argocd-image-updater-secrets
+            key: dockerhub-username
+          passwordSecret:
+            name: argocd-image-updater-secrets
+            key: dockerhub-password
 argocd-apps:
   applicationsets:
     root:

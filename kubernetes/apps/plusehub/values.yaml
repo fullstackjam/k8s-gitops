@@ -2,6 +2,11 @@ app-template:
   controllers:
     plusehub:
       replicas: 1
+      annotations:
+        argocd-image-updater.argoproj.io/image-list: plusehub=fullstackjam/plusehub
+        argocd-image-updater.argoproj.io/write-back-method: git
+        argocd-image-updater.argoproj.io/git-branch: master
+        argocd-image-updater.argoproj.io/update-strategy: latest
       containers:
         plusehub:
           image:
