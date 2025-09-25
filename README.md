@@ -65,10 +65,10 @@ A comprehensive, production-ready Kubernetes homelab infrastructure built with I
 
 Comprehensive documentation is available at [k8s-gitops.fullstackjam.com](https://k8s-gitops.fullstackjam.com), including:
 
-- **[Installation Guide](https://k8s-gitops.fullstackjam.com/installation/)**: Step-by-step setup instructions
-- **[Architecture Overview](https://k8s-gitops.fullstackjam.com/reference/architecture/)**: Detailed system architecture
-- **[Concepts](https://k8s-gitops.fullstackjam.com/concepts/)**: Key concepts and design decisions
-- **[How-to Guides](https://k8s-gitops.fullstackjam.com/how-to-guides/)**: Common tasks and configurations
+- **[Installation Guide](https://k8s-gitops.fullstackjam.com/installation/production/prerequisites/)**: Step-by-step setup instructions
+- **[Architecture Overview](https://k8s-gitops.fullstackjam.com/reference/architecture/overview/)**: Detailed system architecture
+- **[Concepts](https://k8s-gitops.fullstackjam.com/concepts/secrets-management/)**: Key concepts and design decisions
+- **[How-to Guides](https://k8s-gitops.fullstackjam.com/how-to-guides/expose-services-to-the-internet/)**: Common tasks and configurations
 - **[Roadmap](https://k8s-gitops.fullstackjam.com/reference/roadmap/)**: Current status and future plans
 
 ## 🚀 Quick Start
