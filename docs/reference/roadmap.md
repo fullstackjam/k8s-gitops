@@ -15,7 +15,7 @@ Good enough for tinkering and personal usage, and reasonably secure.
 - [x] Automated bare metal provisioning
     - [x] Controller set up (Docker)
     - [x] OS installation (PXE boot)
-- [x] Automated cluster creation (k3s)
+- [x] Automated cluster creation (kubespray)
 - [x] Automated application deployment (ArgoCD)
 - [x] Automated DNS management
 - [x] Initialize GitOps repository on Gitea automatically
