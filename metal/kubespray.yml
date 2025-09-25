@@ -1,4 +1,4 @@
-- name: Create Kubernetes cluster with kubespray
+- name: Check Kubernetes installation status
   hosts: metal
   roles:
     - prerequisites
@@ -9,13 +9,19 @@
       failed_when: false
       changed_when: false
 
-    - name: Fail if Kubernetes is already installed
-      fail:
-        msg: "Kubernetes is already installed and running. Skipping deployment."
+    - name: Success message if Kubernetes is already installed
+      debug:
+        msg: "✅ Kubernetes is already installed and running. Proceeding with cluster configuration."
       when: k8s_check.rc == 0
 
-    - name: Deploy Kubernetes cluster using kubespray
-      command: ansible-playbook -i kubespray/inventory/sample/hosts.yaml kubespray/cluster.yml
-      args:
-        chdir: "{{ playbook_dir }}"
+    - name: Fail if Kubernetes is not installed
+      fail:
+        msg: |
+          ❌ Kubernetes is not installed or not running.
+          
+          Please install Kubernetes first using the kubespray repository:
+          https://github.com/fullstackjam/kubespray
+          
+          After installation is complete, return to this repository to continue
+          with the homelab configuration.
       when: k8s_check.rc != 0
