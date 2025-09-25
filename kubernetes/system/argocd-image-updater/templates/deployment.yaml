@@ -24,9 +24,38 @@ spec:
         imagePullPolicy: {{ .Values.imageUpdater.image.pullPolicy }}
         args: {{ toYaml .Values.imageUpdater.args | nindent 8 }}
         env:
+        {{- range .Values.imageUpdater.env }}
+        - name: {{ .name }}
+          value: {{ .value | quote }}
+        {{- end }}
         - name: ARGOCD_APPLICATION_NAMESPACES
           value: "{{ .Release.Namespace }}"
         resources: {{ toYaml .Values.imageUpdater.resources | nindent 10 }}
+        ports:
+        - name: health
+          containerPort: 8080
+          protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 3
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 3
+          periodSeconds: 30
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
         volumeMounts:
         - name: config
           mountPath: /app/config
