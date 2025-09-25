@@ -119,7 +119,7 @@ k8s-gitops/
 │   ├── platform/         # Platform services
 │   └── system/           # System components
 ├── metal/                 # Bare metal provisioning (Ansible)
-│   └── kubespray/        # Kubernetes deployment with kubespray (submodule)
+│   └── kubespray/        # Kubernetes deployment with [kubespray](https://github.com/fullstackjam/kubespray) (submodule)
 ├── external/             # External resource management
 ├── scripts/              # Utility scripts
 └── test/                 # Integration tests
