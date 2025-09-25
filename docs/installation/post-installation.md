@@ -7,8 +7,8 @@ Save the following files to a safe location like a password manager:
 - `~/.ssh/id_rsa`
 - `~/.ssh/id_rsa.pub`
 - `./metal/kubeconfig.yaml`
-- `~/.external.d/credentials.tfrc.json`
-- `./external/external.tfvars`
+- `~/.terraform.d/credentials.tfrc.json`
+- `./external/terraform.tfvars`
 
 ## Admin credentials
 
