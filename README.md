@@ -71,9 +71,7 @@ Comprehensive documentation is available at [k8s-gitops.fullstackjam.com](https:
 - **[How-to Guides](https://k8s-gitops.fullstackjam.com/how-to-guides/expose-services-to-the-internet/)**: Common tasks and configurations
 - **[Roadmap](https://k8s-gitops.fullstackjam.com/reference/roadmap/)**: Current status and future plans
 
-## 🚀 Quick Start
-
-### Production Deployment
+## 🚀 Production Deployment
 
 For production deployment, see the [Production Installation Guide](https://k8s-gitops.fullstackjam.com/installation/production/prerequisites/).
 
@@ -158,13 +156,6 @@ This project is licensed under the GNU General Public License v3.0 - see the [LI
 - Inspired by [khuedoan/homelab](https://github.com/khuedoan/homelab)
 - Built with modern DevOps tools and practices
 - Community contributions and feedback
-
-## 📞 Support
-
-- 📖 **Documentation**: [k8s-gitops.fullstackjam.com](https://k8s-gitops.fullstackjam.com)
-- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/fullstackjam/k8s-gitops/issues)
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/fullstackjam/k8s-gitops/discussions)
-- 📧 **Contact**: mail@fullstackjam.com
 
 ---
 
