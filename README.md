@@ -73,16 +73,9 @@ Comprehensive documentation is available at [k8s-gitops.fullstackjam.com](https:
 
 ## 🚀 Quick Start
 
-### Prerequisites
-
-- Linux machine with Docker installed
-- Make utility
-- Git
-- SSH access to target servers
-
 ### Production Deployment
 
-For production deployment, see the [Production Installation Guide](https://k8s-gitops.fullstackjam.com/installation/production/).
+For production deployment, see the [Production Installation Guide](https://k8s-gitops.fullstackjam.com/installation/production/prerequisites/).
 
 ## 🛠️ Tech Stack
 
