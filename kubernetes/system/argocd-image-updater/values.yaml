@@ -32,11 +32,18 @@ imageUpdater:
   
   args:
     - run
+    - --registries-conf-path=/app/config/registries.conf
     - --interval=3m
-    - --loglevel=info
-    - --registries-conf=/app/config/registries.conf
-    - --argocd-server-addr=argocd-server.argocd.svc.cluster.local
-    - --argocd-grpc-web
+  
+  env:
+    - name: ARGOCD_SERVER
+      value: "argocd-server.argocd.svc.cluster.local"
+    - name: ARGOCD_GRPC_WEB
+      value: "true"
+    - name: IMAGE_UPDATER_LOGLEVEL
+      value: "info"
+    - name: ARGOCD_INSECURE
+      value: "true"
 
 serviceAccount:
   create: true
