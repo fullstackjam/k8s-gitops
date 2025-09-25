@@ -15,14 +15,15 @@ data:
       api_url: {{ .api_url }}
       credentials: {{ .credentials }}
     {{- end }}
-    credentials:
-    {{- range .Values.imageUpdater.config.credentials }}
-    - name: {{ .name }}
-      url: {{ .url }}
-      usernameSecret:
-        name: {{ .usernameSecret.name }}
-        key: {{ .usernameSecret.key }}
-      passwordSecret:
-        name: {{ .passwordSecret.name }}
-        key: {{ .passwordSecret.key }}
-    {{- end }}
+  commit.template: |
+    build: update {{.AppName}} from {{.OldImage}} to {{.NewImage}}
+
+    Automated image update:
+
+    - {{.AppName}} image updated from `{{.OldImage}}` to `{{.NewImage}}`
+    - {{range .Images}}  - {{.Name}}: {{.OldTag}} -> {{.NewTag}}
+    {{end}}
+
+    {{if .KustomizeImages}}Kustomize images:
+    {{range .KustomizeImages}}  - {{.Name}}: {{.OldTag}} -> {{.NewTag}}
+    {{end}}{{end}}

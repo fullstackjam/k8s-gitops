@@ -19,16 +19,7 @@ imageUpdater:
       - name: Docker Hub
         prefix: fullstackjam/
         api_url: https://registry-1.docker.io
-        credentials: dockerhub
-    credentials:
-      - name: dockerhub
-        url: https://registry-1.docker.io
-        usernameSecret:
-          name: argocd-image-updater-secrets
-          key: dockerhub-username
-        passwordSecret:
-          name: argocd-image-updater-secrets
-          key: dockerhub-password
+        credentials: pullsecret:argocd/argocd-image-updater-secrets
   
   args:
     - run
