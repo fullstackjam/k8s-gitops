@@ -51,13 +51,13 @@ argocd-apps:
       template:
         metadata:
           name: '{{path.basename}}'
-          {{- if eq path.basename "plusehub" }}
+          {{#eq path.basename "plusehub"}}
           annotations:
             argocd-image-updater.argoproj.io/image-list: plusehub=fullstackjam/plusehub
             argocd-image-updater.argoproj.io/write-back-method: git
             argocd-image-updater.argoproj.io/git-branch: master
             argocd-image-updater.argoproj.io/update-strategy: latest
-          {{- end }}
+          {{/eq}}
         spec:
           destination:
             name: in-cluster
