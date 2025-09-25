@@ -5,7 +5,10 @@
 KUBECONFIG = $(shell pwd)/metal/kubeconfig.yaml
 KUBE_CONFIG_PATH = $(KUBECONFIG)
 
-default: bootstrap terraform smoke-test post-install
+default: submodules bootstrap terraform smoke-test post-install
+
+submodules:
+	git submodule update --init --recursive
 
 metal:
 	make -C metal

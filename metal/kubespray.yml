@@ -1,0 +1,9 @@
+- name: Create Kubernetes cluster with kubespray
+  hosts: metal
+  roles:
+    - prerequisites
+  tasks:
+    - name: Deploy Kubernetes cluster using kubespray
+      command: ansible-playbook -i kubespray/inventory/sample/hosts.yaml kubespray/cluster.yml
+      args:
+        chdir: "{{ playbook_dir }}"

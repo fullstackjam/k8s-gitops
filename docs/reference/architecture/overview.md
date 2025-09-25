@@ -18,7 +18,7 @@
 
 Main components:
 
-- `./metal`: bare metal management, install Linux and Kubernetes
+- `./metal`: bare metal management, install Linux and Kubernetes using [kubespray](https://github.com/fullstackjam/kubespray)
 - `./system`: critical system components for the cluster (load balancer, storage, ingress, operation tools...)
 - `./kubernetes/platform`: essential components for service hosting platform (git, build runners, dashboards...)
 - `./apps`: user facing applications

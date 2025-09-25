@@ -10,7 +10,7 @@ A comprehensive, production-ready Kubernetes homelab infrastructure built with I
 
 ### Core Infrastructure
 - **Automated Bare Metal Provisioning**: PXE-based installation of Fedora Server across multiple nodes
-- **Kubernetes Cluster**: Deployed using kubespray for production-grade configuration
+- **Kubernetes Cluster**: Deployed using [kubespray](https://github.com/fullstackjam/kubespray) for production-grade configuration
 - **GitOps Workflow**: ArgoCD for continuous deployment and configuration management
 - **Infrastructure as Code**: Everything defined declaratively with Ansible, Terraform, and Kubernetes manifests
 
@@ -79,7 +79,7 @@ For production deployment, see the [Production Installation Guide](https://k8s-g
 
 ### Infrastructure
 - **Operating System**: Fedora Server
-- **Container Orchestration**: Kubernetes (deployed with kubespray)
+- **Container Orchestration**: Kubernetes (deployed with [kubespray](https://github.com/fullstackjam/kubespray))
 - **Infrastructure Automation**: Ansible
 - **Infrastructure Provisioning**: Terraform
 - **GitOps**: ArgoCD
@@ -119,6 +119,7 @@ k8s-gitops/
 │   ├── platform/         # Platform services
 │   └── system/           # System components
 ├── metal/                 # Bare metal provisioning (Ansible)
+│   └── kubespray/        # Kubernetes deployment with kubespray (submodule)
 ├── terraform/            # Infrastructure provisioning
 ├── scripts/              # Utility scripts
 └── test/                 # Integration tests
