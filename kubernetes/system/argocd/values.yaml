@@ -48,8 +48,6 @@ argocd-apps:
               - path: kubernetes/system/*
               - path: kubernetes/platform/*
               - path: kubernetes/apps/*
-            exclude:
-              - path: kubernetes/apps/plusehub
       template:
         metadata:
           name: '{{path.basename}}'
