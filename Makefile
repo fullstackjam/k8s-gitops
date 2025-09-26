@@ -5,7 +5,7 @@
 KUBECONFIG = $(shell pwd)/metal/kubeconfig.yaml
 KUBE_CONFIG_PATH = $(KUBECONFIG)
 
-default: bootstrap external smoke-test post-install
+default: bootstrap external smoke-test post-install applications
 
 metal:
 	make -C metal
@@ -21,6 +21,11 @@ smoke-test:
 
 post-install:
 	@./scripts/hacks
+
+applications:
+	@echo "Deploying standalone applications..."
+	@kubectl apply -f applications/
+	@echo "Standalone applications deployed successfully"
 
 test:
 	make -C test
