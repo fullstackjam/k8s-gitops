@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: portfolio
+  namespace: argocd
+  annotations:
+    argocd-image-updater.argoproj.io/image-list: portfolio=fullstackjam/portfolio
+    argocd-image-updater.argoproj.io/write-back-method: argocd
+    argocd-image-updater.argoproj.io/git-branch: master
+    argocd-image-updater.argoproj.io/update-strategy: newest-build
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/fullstackjam/portfolio
+    targetRevision: master
+    path: helm/portfolio
+  destination:
+    name: in-cluster
+    namespace: portfolio
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    retry:
+      limit: 10
+      backoff:
+        duration: 1m
+        factor: 2
+        maxDuration: 16m
+    syncOptions:
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+      - ServerSideApply=true
