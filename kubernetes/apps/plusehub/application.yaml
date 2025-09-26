@@ -15,7 +15,7 @@ spec:
     targetRevision: master
     path: helm/pulsehub
   destination:
-    server: https://kubernetes.default.svc
+    name: in-cluster
     namespace: plusehub
   syncPolicy:
     automated:
