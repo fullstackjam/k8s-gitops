@@ -14,6 +14,7 @@ data:
       prefix: {{ .prefix }}
       api_url: {{ .api_url }}
       credentials: {{ .credentials }}
+      credsexpiry: 0
     {{- end }}
   commit.template: |
     build: update {{.AppName}} from {{.OldImage}} to {{.NewImage}}
