@@ -60,15 +60,9 @@ spec:
           readOnly: true
         - name: tmp
           mountPath: /tmp
-        - name: docker-config
-          mountPath: /app/docker-config
-          readOnly: true
       volumes:
       - name: config
         configMap:
           name: argocd-image-updater-config
       - name: tmp
         emptyDir: {}
-      - name: docker-config
-        secret:
-          secretName: argocd-image-updater-secrets
