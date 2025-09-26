@@ -74,3 +74,14 @@ argocd-apps:
               - CreateNamespace=true
               - ApplyOutOfSyncOnly=true
               - ServerSideApply=true
+    
+    # ApplicationSet for standalone Applications
+    standalone-apps:
+      namespace: argocd
+      generators:
+        - git:
+            repoURL: *repoURL
+            revision: *revision
+            files:
+              - path: applications/*.yaml
+      # No template - use file content directly
