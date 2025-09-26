@@ -1,8 +1,0 @@
-autoally-backend:
-  enabled: true
-  replicaCount: 2
-  image:
-    repository: fullstackjam/autoally-backend
-    tag: latest
-  ingress:
-    host: autoally-backend.fullstackjam.com
