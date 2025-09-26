@@ -28,8 +28,6 @@ spec:
         - name: {{ .name }}
           value: {{ .value | quote }}
         {{- end }}
-        - name: ARGOCD_APPLICATION_NAMESPACES
-          value: "{{ .Release.Namespace }}"
         resources: {{ toYaml .Values.imageUpdater.resources | nindent 10 }}
         ports:
         - name: health
