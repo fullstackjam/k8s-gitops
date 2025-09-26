@@ -58,8 +58,13 @@ argocd-apps:
             namespace: '{{path.basename}}'
           project: default
           source:
+            {{- if contains "apps-direct" path }}
+            repoURL: https://github.com/fullstackjam/plusehub
+            path: helm/pulsehub
+            {{- else }}
             repoURL: *repoURL
             path: '{{path}}'
+            {{- end }}
             targetRevision: *revision
           syncPolicy:
             automated:
