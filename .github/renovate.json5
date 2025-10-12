@@ -4,6 +4,8 @@
     "config:base"
   ],
   "ignoreTests": true,
+  "automergeType": "pr",
+  "automergeStrategy": "rebase",
   "packageRules": [
     {
       "matchPackagePatterns": [
@@ -16,7 +18,6 @@
       "groupName": "all non-major dependencies",
       "groupSlug": "all-minor-patch",
       "automerge": true,
-      "platformAutomerge": true,
       "ignoreTests": true
     },
     {
