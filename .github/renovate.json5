@@ -3,6 +3,7 @@
   "extends": [
     "config:base"
   ],
+  "ignoreTests": true,
   "packageRules": [
     {
       "matchPackagePatterns": [
@@ -15,7 +16,8 @@
       "groupName": "all non-major dependencies",
       "groupSlug": "all-minor-patch",
       "automerge": true,
-      "platformAutomerge": true
+      "platformAutomerge": true,
+      "ignoreTests": true
     },
     {
       "matchPackageNames": [
