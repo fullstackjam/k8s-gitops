@@ -6,10 +6,21 @@ argo-cd:
       server.insecure: true
       controller.diff.server.side: true
     cm:
+      accounts.wangchong: login
       resource.ignoreResourceUpdatesEnabled: true
       resource.customizations.ignoreResourceUpdates.all: |
         jsonPointers:
           - /status
+    rbac:
+      policy.csv: |
+        p, role:readonly, applications, get, */*, allow
+        p, role:readonly, projects, get, *, allow
+        g, wangchong, role:readonly
+      policy.default: role:readonly
+    secret:
+      extra:
+        accounts.wangchong.password: "$2y$10$WNWJc7wD7tDGnTqkcBuSmOc3X7ZNQD1Q6Tmpbu1.7SQfe2r5d1EAe"
+        accounts.wangchong.enabled: "true"
   server:
     ingress:
       enabled: true
@@ -29,7 +40,7 @@ argo-cd:
     replicas: 3
     metrics: *metrics
   repoServer:
-    replicas: 3 
+    replicas: 3
     metrics: *metrics
   redis:
     metrics: *metrics
