@@ -1,0 +1,53 @@
+# Velero Helm Chart Configuration
+velero:
+  # Basic configuration
+  image:
+    repository: velero/velero
+    tag: v1.15.0
+    pullPolicy: IfNotPresent
+
+  # Enable Velero server
+  server:
+    enabled: true
+
+  # Enable Velero CLI
+  cli:
+    enabled: false
+
+  # Basic configuration
+  configuration:
+    provider: aws
+    backupStorageLocation:
+      - name: default
+        provider: aws
+        bucket: velero-backups
+        config:
+          region: us-east-1
+        default: true
+
+    volumeSnapshotLocations:
+      - name: default
+        provider: aws
+        config:
+          region: us-east-1
+
+  # Service account
+  serviceAccount:
+    server:
+      create: true
+
+  # Init containers for AWS plugin
+  initContainers:
+    - name: velero-plugin-for-aws
+      image: velero/velero-plugin-for-aws:v1.10.1
+      imagePullPolicy: IfNotPresent
+      volumeMounts:
+        - mountPath: /target
+          name: plugins
+
+  # Enable metrics
+  metrics:
+    enabled: true
+
+  # Upgrade CRDs
+  upgradeCRDs: true
