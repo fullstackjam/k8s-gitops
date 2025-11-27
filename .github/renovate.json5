@@ -28,7 +28,8 @@
         "k8s.io/api",
         "k8s.io/apimachinery",
         "k8s.io/client-go",
-        "gitea"
+        "gitea",
+        "quay.io/argoprojlabs/argocd-image-updater"
       ],
       "enabled": false
     }
