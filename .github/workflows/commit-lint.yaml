@@ -1,0 +1,59 @@
+name: Commit Message Validation
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - master
+
+jobs:
+  validate:
+    name: Validate Commits
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Check for Chinese characters
+        run: |
+          # Get commits to check
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            COMMITS=$(git rev-list --no-merges ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }})
+          else
+            COMMITS=$(git rev-parse HEAD)
+          fi
+          
+          echo "🔍 Checking for Chinese characters in commit messages..."
+          FAILED=0
+          
+          for commit in $COMMITS; do
+            MESSAGE=$(git log -1 --pretty=%B $commit)
+            SHORT_SHA=$(echo $commit | cut -c1-7)
+            SUBJECT=$(echo "$MESSAGE" | head -n1)
+            
+            # Check for Chinese characters (Unicode range 4E00-9FFF)
+            if echo "$MESSAGE" | grep -P '[\x{4e00}-\x{9fff}]' > /dev/null 2>&1; then
+              echo "❌ Commit $SHORT_SHA contains Chinese characters: $SUBJECT"
+              FAILED=1
+            else
+              echo "✅ Commit $SHORT_SHA: $SUBJECT"
+            fi
+          done
+          
+          if [ $FAILED -eq 1 ]; then
+            echo ""
+            echo "❌ Found commits with Chinese characters. Please use English only."
+            exit 1
+          fi
+          
+          echo ""
+          echo "✅ No Chinese characters found in commit messages"
+
+      - name: Validate Conventional Commits
+        uses: wagoid/commitlint-github-action@v6
+        with:
+          configFile: .commitlintrc.json
+
