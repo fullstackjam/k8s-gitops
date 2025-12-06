@@ -1,0 +1,7 @@
+argo-workflows:
+  controller:
+    workflowNamespaces:
+      - argo-workflows
+  server:
+    ingress:
+      enabled: false

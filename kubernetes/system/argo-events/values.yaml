@@ -1,0 +1,4 @@
+argo-events:
+  # Default values are usually sufficient for basic installation
+  controller:
+    replicas: 1
