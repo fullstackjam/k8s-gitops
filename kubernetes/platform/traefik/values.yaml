@@ -29,9 +29,16 @@ traefik:
       enabled: true
       matchRule: Host(`traefik.fullstackjam.com`)
       entryPoints: ["websecure"]
-      # TLS configuration
+      # Cert-manager annotations
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+        external-dns.alpha.kubernetes.io/target: "homelab-tunnel.fullstackjam.com"
+        external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
+      # TLS configuration - use cert-manager
       tls:
-        certResolver: letsencrypt
+        secretName: traefik-tls-certificate
+        domains:
+          - main: traefik.fullstackjam.com
 
   # Enable metrics for Prometheus
   metrics:
@@ -40,33 +47,6 @@ traefik:
         enabled: true
       serviceMonitor:
         enabled: true
-
-  # Certificate resolver for Let's Encrypt
-  certResolvers:
-    letsencrypt:
-      acme:
-        email: admin@fullstackjam.com
-        storage: /data/acme.json
-        dnsChallenge:
-          provider: cloudflare
-          resolvers:
-            - "1.1.1.1:53"
-            - "1.0.0.1:53"
-
-  # Environment variables for Cloudflare DNS challenge
-  env:
-    - name: CF_API_TOKEN
-      valueFrom:
-        secretKeyRef:
-          name: cloudflare-api-token
-          key: value
-
-  # Persistence for ACME certificates
-  persistence:
-    enabled: true
-    accessMode: ReadWriteOnce
-    size: 128Mi
-    path: /data
 
   # Service configuration
   service:
