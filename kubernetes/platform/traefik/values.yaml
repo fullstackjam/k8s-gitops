@@ -51,4 +51,4 @@ traefik:
   # Service configuration
   service:
     enabled: true
-    type: ClusterIP
+    type: LoadBalancer
