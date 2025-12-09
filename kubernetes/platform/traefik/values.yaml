@@ -86,6 +86,9 @@ traefik:
       metadata:
         name: traefik-dashboard
         namespace: traefik
+        annotations:
+          external-dns.alpha.kubernetes.io/target: "homelab-tunnel.fullstackjam.com"
+          external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
       spec:
         parentRefs:
           - name: traefik-gateway
