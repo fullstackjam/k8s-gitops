@@ -29,14 +29,34 @@ argo-cd:
           env:
             - name: EXTENSION_URL
               value: https://github.com/argoproj-labs/rollout-extension/releases/download/v0.3.7/extension.tar
+    # Disable Ingress - using Gateway API instead
     ingress:
+      enabled: false
+    # Enable Gateway API HTTPRoute
+    route:
       enabled: true
-      ingressClassName: nginx
+      hostname: argocd.fullstackjam.com
       annotations:
-        cert-manager.io/cluster-issuer: letsencrypt-prod
         external-dns.alpha.kubernetes.io/target: "homelab-tunnel.fullstackjam.com"
         external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
-      tls: true
+      rules:
+        - matches:
+            - path:
+                type: PathPrefix
+                value: /
+          backendRefs:
+            - name: '{{ include "argo-cd.server.fullname" . }}'
+              port: 80
+      parentRefs:
+        - name: traefik-gateway
+          namespace: traefik
+          sectionName: websecure
+      tls:
+        certificateRefs:
+          - name: argocd-server-tls
+    # Configure service for HTTPS backend
+    service:
+      servicePortHttpsAppProtocol: HTTPS
     metrics: &metrics
       enabled: true
       serviceMonitor:
