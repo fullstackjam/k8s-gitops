@@ -2,6 +2,73 @@ traefik:
   deployment:
     enabled: true
     replicas: 3
+
+  # Disable Ingress support
   ingressClass:
+    enabled: false
+
+  # Enable Gateway API provider
+  providers:
+    kubernetesGateway:
+      enabled: true
+
+  # Configure entry points
+  ports:
+    web:
+      port: 8000
+      exposedPort: 80
+      protocol: TCP
+    websecure:
+      port: 8443
+      exposedPort: 443
+      protocol: TCP
+
+  # Enable Traefik dashboard
+  ingressRoute:
+    dashboard:
+      enabled: true
+      matchRule: Host(`traefik.fullstackjam.com`)
+      entryPoints: ["websecure"]
+      # TLS configuration
+      tls:
+        certResolver: letsencrypt
+
+  # Enable metrics for Prometheus
+  metrics:
+    prometheus:
+      service:
+        enabled: true
+      serviceMonitor:
+        enabled: true
+
+  # Certificate resolver for Let's Encrypt
+  certResolvers:
+    letsencrypt:
+      acme:
+        email: admin@fullstackjam.com
+        storage: /data/acme.json
+        dnsChallenge:
+          provider: cloudflare
+          resolvers:
+            - "1.1.1.1:53"
+            - "1.0.0.1:53"
+
+  # Environment variables for Cloudflare DNS challenge
+  env:
+    - name: CF_API_TOKEN
+      valueFrom:
+        secretKeyRef:
+          name: cloudflare-api-token
+          key: value
+
+  # Persistence for ACME certificates
+  persistence:
     enabled: true
-    isDefaultClass: false
+    accessMode: ReadWriteOnce
+    size: 128Mi
+    path: /data
+
+  # Service configuration
+  service:
+    enabled: true
+    type: ClusterIP
