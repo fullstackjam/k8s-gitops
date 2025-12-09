@@ -23,22 +23,35 @@ traefik:
       exposedPort: 443
       protocol: TCP
 
-  # Enable Traefik dashboard
+  # Enable Traefik dashboard via IngressRoute (internal only)
   ingressRoute:
     dashboard:
       enabled: true
-      matchRule: Host(`traefik.fullstackjam.com`)
-      entryPoints: ["websecure"]
-      # Cert-manager annotations
-      annotations:
-        cert-manager.io/cluster-issuer: letsencrypt-prod
-        external-dns.alpha.kubernetes.io/target: "homelab-tunnel.fullstackjam.com"
-        external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
-      # TLS configuration - use cert-manager
-      tls:
-        secretName: traefik-tls-certificate
-        domains:
-          - main: traefik.fullstackjam.com
+      entryPoints: ["traefik"]
+
+  # Gateway API configuration
+  gatewayClass:
+    enabled: true
+    name: traefik
+
+  gateway:
+    enabled: true
+    name: traefik-gateway
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+      external-dns.alpha.kubernetes.io/target: "homelab-tunnel.fullstackjam.com"
+      external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
+    listeners:
+      web:
+        port: 8000
+        protocol: HTTP
+      websecure:
+        port: 8443
+        protocol: HTTPS
+        hostname: traefik.fullstackjam.com
+        certificateRefs:
+          - name: traefik-tls-certificate
+            kind: Secret
 
   # Enable metrics for Prometheus
   metrics:
