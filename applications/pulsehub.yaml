@@ -17,11 +17,12 @@ spec:
     helm:
       values: |
         rollout:
-          trafficRouting:
-            nginx:
-              additionalIngressAnnotations:
-                external-dns.alpha.kubernetes.io/target: "homelab-tunnel.fullstackjam.com"
-                external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
+          canary:
+            trafficRouting:
+              nginx:
+                additionalIngressAnnotations:
+                  external-dns.alpha.kubernetes.io/target: "homelab-tunnel.fullstackjam.com"
+                  external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
   destination:
     name: in-cluster
     namespace: pulsehub
