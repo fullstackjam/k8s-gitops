@@ -14,15 +14,6 @@ spec:
     repoURL: https://github.com/fullstackjam/pulsehub
     targetRevision: master
     path: helm/pulsehub
-    helm:
-      values: |
-        rollout:
-          canary:
-            trafficRouting:
-              nginx:
-                additionalIngressAnnotations:
-                  external-dns.alpha.kubernetes.io/target: "homelab-tunnel.fullstackjam.com"
-                  external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
   destination:
     name: in-cluster
     namespace: pulsehub
