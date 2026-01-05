@@ -7,6 +7,7 @@ spec:
   count: 1
   elasticsearchRefs:
   - name: elasticsearch
+    clusterName: elasticsearch
   podTemplate:
     spec:
       containers:
