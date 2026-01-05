@@ -55,9 +55,9 @@ spec:
       }
       output {
         elasticsearch {
-          hosts => ["https://elasticsearch-es-http:9200"]
-          user => "${ELASTICSEARCH_USER}"
-          password => "${ELASTICSEARCH_PASSWORD}"
+          hosts => ["${ELASTIC_STACK_ELASTICSEARCH_HOST}"]
+          user => "${ELASTIC_STACK_ELASTICSEARCH_USERNAME}"
+          password => "${ELASTIC_STACK_ELASTICSEARCH_PASSWORD}"
           ssl => true
           ssl_certificate_verification => false
           index => "filebeat-%{[@metadata][index_suffix]}-%{+YYYY.MM.dd}"
