@@ -3,7 +3,7 @@ kind: Elasticsearch
 metadata:
   name: elasticsearch
 spec:
-  version: 9.0.2
+  version: 8.17.4
   auth:
     roles:
       - secretName: elasticsearch-roles
