@@ -1,0 +1,64 @@
+apiVersion: logstash.k8s.elastic.co/v1alpha1
+kind: Logstash
+metadata:
+  name: logstash
+spec:
+  version: 8.16.1
+  count: 1
+  elasticsearchRefs:
+  - name: elasticsearch
+  podTemplate:
+    spec:
+      containers:
+      - name: logstash
+        resources:
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+  volumeClaimTemplates:
+  - metadata:
+      name: logstash-data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 5Gi
+      storageClassName: standard-rwo
+  config:
+    log.level: info
+    pipeline.workers: 2
+    pipeline.batch.size: 125
+    pipeline.batch.delay: 50
+  pipelines:
+  - pipeline.id: main
+    config.string: |
+      input {
+        beats {
+          port => 5044
+        }
+      }
+      filter {
+        if [kubernetes][namespace] {
+          mutate {
+            add_field => { "[@metadata][index_suffix]" => "%{[kubernetes][namespace]}" }
+          }
+        } else {
+          mutate {
+            add_field => { "[@metadata][index_suffix]" => "unknown" }
+          }
+        }
+      }
+      output {
+        elasticsearch {
+          hosts => ["https://elasticsearch-es-http:9200"]
+          user => "${ELASTICSEARCH_USER}"
+          password => "${ELASTICSEARCH_PASSWORD}"
+          ssl => true
+          ssl_certificate_verification => false
+          index => "filebeat-%{[@metadata][index_suffix]}-%{+YYYY.MM.dd}"
+        }
+      }

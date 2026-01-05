@@ -1,0 +1,49 @@
+apiVersion: kibana.k8s.elastic.co/v1
+kind: Kibana
+metadata:
+  name: kibana
+spec:
+  version: 8.16.1
+  count: 1
+  elasticsearchRef:
+    name: elasticsearch
+  podTemplate:
+    spec:
+      containers:
+      - name: kibana
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+        env:
+        - name: NODE_OPTIONS
+          value: "--max-old-space-size=512"
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kibana
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    external-dns.alpha.kubernetes.io/target: "homelab-tunnel.fullstackjam.com"
+    external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - kibana.fullstackjam.com
+    secretName: kibana-tls
+  rules:
+  - host: kibana.fullstackjam.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: kibana-kb-http
+            port:
+              number: 5601

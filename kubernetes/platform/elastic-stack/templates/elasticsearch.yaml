@@ -1,0 +1,38 @@
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Elasticsearch
+metadata:
+  name: elasticsearch
+spec:
+  version: 8.16.1
+  nodeSets:
+  - name: default
+    count: 3
+    config:
+      node.store.allow_mmap: false
+      xpack.security.enabled: true
+      xpack.security.transport.ssl.enabled: true
+      xpack.security.http.ssl.enabled: true
+    podTemplate:
+      spec:
+        containers:
+        - name: elasticsearch
+          resources:
+            limits:
+              memory: "4Gi"
+              cpu: "2000m"
+            requests:
+              memory: "2Gi"
+              cpu: "1000m"
+          env:
+          - name: ES_JAVA_OPTS
+            value: "-Xms2g -Xmx2g"
+    volumeClaimTemplates:
+    - metadata:
+        name: elasticsearch-data
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 20Gi
+        storageClassName: standard-rwo
