@@ -6,35 +6,37 @@ imageUpdater:
   
   replicas: 1
   
+  # Log level: trace, debug, info, warn, error
+  logLevel: info
+  
+  # Interval for checking image updates
+  interval: 3m
+  
   resources:
     limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
       cpu: 100m
       memory: 128Mi
-    requests:
-      cpu: 50m
-      memory: 64Mi
+  
+  # Extra arguments to pass to the controller
+  extraArgs: []
+  
+  # Extra environment variables
+  extraEnv: []
+  
+  # SSH signing key configuration for git commit signing
+  sshSigningKey:
+    enabled: false
+    secretName: ssh-git-creds
   
   config:
     registries:
       - name: Docker Hub
-        prefix: fullstackjam/
+        prefix: docker.io
         api_url: https://registry-1.docker.io
-        credentials: username:argocd/argocd-image-updater-secrets
-  
-  args:
-    - run
-    - --registries-conf-path=/app/config/registries.conf
-    - --interval=3m
-  
-  env:
-    - name: ARGOCD_SERVER
-      value: "argocd-server.argocd.svc.cluster.local"
-    - name: ARGOCD_GRPC_WEB
-      value: "true"
-    - name: IMAGE_UPDATER_LOGLEVEL
-      value: "info"
-    - name: ARGOCD_INSECURE
-      value: "true"
+        default: true
 
 serviceAccount:
   create: true

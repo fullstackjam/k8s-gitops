@@ -1,0 +1,24 @@
+{{- if .Values.imageUpdaterCR }}
+{{- if .Values.imageUpdaterCR.enabled }}
+apiVersion: argocd-image-updater.argoproj.io/v1alpha1
+kind: ImageUpdater
+metadata:
+  name: {{ .Values.imageUpdaterCR.name | default "default-image-updater" }}
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: argocd-image-updater
+    app.kubernetes.io/part-of: argocd
+spec:
+  namespace: {{ .Values.imageUpdaterCR.targetNamespace | default "argocd" }}
+  {{- if .Values.imageUpdaterCR.commonUpdateSettings }}
+  commonUpdateSettings:
+    {{- toYaml .Values.imageUpdaterCR.commonUpdateSettings | nindent 4 }}
+  {{- end }}
+  {{- if .Values.imageUpdaterCR.writeBackConfig }}
+  writeBackConfig:
+    {{- toYaml .Values.imageUpdaterCR.writeBackConfig | nindent 4 }}
+  {{- end }}
+  applicationRefs:
+    {{- toYaml .Values.imageUpdaterCR.applicationRefs | nindent 4 }}
+{{- end }}
+{{- end }}

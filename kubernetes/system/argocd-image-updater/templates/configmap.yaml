@@ -7,23 +7,29 @@ metadata:
     app.kubernetes.io/name: argocd-image-updater
     app.kubernetes.io/part-of: argocd
 data:
+  argocd.namespace: "argocd"
+  log.level: {{ .Values.imageUpdater.logLevel | default "info" | quote }}
+  log.format: "text"
+  interval: {{ .Values.imageUpdater.interval | default "3m" | quote }}
   registries.conf: |
     registries:
     {{- range .Values.imageUpdater.config.registries }}
     - name: {{ .name }}
       prefix: {{ .prefix }}
       api_url: {{ .api_url }}
+      {{- if .credentials }}
       credentials: {{ .credentials }}
+      {{- end }}
+      {{- if .default }}
+      default: {{ .default }}
+      {{- end }}
     {{- end }}
-  commit.template: |
-    build: update {{.AppName}} from {{.OldImage}} to {{.NewImage}}
+  git.commit-message-template: |
+    build: update {{ `{{.AppName}}` }} from {{ `{{.OldImage}}` }} to {{ `{{.NewImage}}` }}
 
     Automated image update:
 
-    - {{.AppName}} image updated from `{{.OldImage}}` to `{{.NewImage}}`
-    - {{range .Images}}  - {{.Name}}: {{.OldTag}} -> {{.NewTag}}
-    {{end}}
-
-    {{if .KustomizeImages}}Kustomize images:
-    {{range .KustomizeImages}}  - {{.Name}}: {{.OldTag}} -> {{.NewTag}}
-    {{end}}{{end}}
+    - {{ `{{.AppName}}` }} image updated from {{ `{{.OldImage}}` }} to {{ `{{.NewImage}}` }}
+    {{ `{{- range .Images}}` }}
+    - {{ `{{.Name}}` }}: {{ `{{.OldTag}}` }} -> {{ `{{.NewTag}}` }}
+    {{ `{{- end}}` }}
