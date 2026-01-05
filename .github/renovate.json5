@@ -21,19 +21,23 @@
       "ignoreTests": true
     },
     {
+      // These packages require manual upgrades due to breaking changes or version skew requirements
       "matchPackageNames": [
         "docker.io/kanidm/server",
-        "external-secrets",
         "go",
         "k8s.io/api",
         "k8s.io/apimachinery",
         "k8s.io/client-go",
-        "gitea",
-        "quay.io/argoprojlabs/argocd-image-updater"
+        "gitea"
       ],
       "enabled": false
-    }
-    ,
+    },
+    {
+      // argocd-image-updater: allow minor/patch only to avoid breaking ArgoCD API compatibility
+      "matchPackageNames": ["quay.io/argoprojlabs/argocd-image-updater"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
+    },
     {
       // Disable Renovate updates for the Helm chart "app-template"
       "matchDatasources": ["helm"],
