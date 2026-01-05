@@ -19,30 +19,6 @@
       "groupSlug": "all-minor-patch",
       "automerge": true,
       "ignoreTests": true
-    },
-    {
-      // These packages require manual upgrades due to breaking changes or version skew requirements
-      "matchPackageNames": [
-        "docker.io/kanidm/server",
-        "go",
-        "k8s.io/api",
-        "k8s.io/apimachinery",
-        "k8s.io/client-go",
-        "gitea"
-      ],
-      "enabled": false
-    },
-    {
-      // argocd-image-updater: allow minor/patch only to avoid breaking ArgoCD API compatibility
-      "matchPackageNames": ["quay.io/argoprojlabs/argocd-image-updater"],
-      "matchUpdateTypes": ["major"],
-      "enabled": false
-    },
-    {
-      "matchDatasources": ["helm"],
-      "matchPackageNames": ["app-template"],
-      "matchUpdateTypes": ["major"],
-      "enabled": false
     }
   ]
 }
