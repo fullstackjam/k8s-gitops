@@ -15,6 +15,21 @@ spec:
       action.auto_create_index: "filebeat-*,kibana-*,.kibana*,.monitoring-*,.watches,.watcher-history-*"
     podTemplate:
       spec:
+        affinity:
+          podAntiAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    elasticsearch.k8s.elastic.co/cluster-name: elasticsearch
+                topologyKey: kubernetes.io/hostname
+        initContainers:
+        - name: sysctl
+          securityContext:
+            privileged: true
+            runAsUser: 0
+          command: ['sh', '-c', 'sysctl -w vm.max_map_count=262144']
         containers:
         - name: elasticsearch
           resources:
@@ -37,3 +52,13 @@ spec:
           requests:
             storage: 20Gi
         storageClassName: standard-rwo
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: elasticsearch-pdb
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      elasticsearch.k8s.elastic.co/cluster-name: elasticsearch

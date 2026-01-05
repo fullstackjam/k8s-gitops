@@ -19,6 +19,16 @@ spec:
           requests:
             memory: "1Gi"
             cpu: "500m"
+  services:
+  - name: beats
+    service:
+      spec:
+        type: ClusterIP
+        ports:
+        - port: 5044
+          name: beats
+          protocol: TCP
+          targetPort: 5044
   volumeClaimTemplates:
   - metadata:
       name: logstash-data
@@ -34,6 +44,9 @@ spec:
     pipeline.workers: 2
     pipeline.batch.size: 125
     pipeline.batch.delay: 50
+    queue.type: persisted
+    queue.max_bytes: 1gb
+    dead_letter_queue.enable: true
   pipelines:
   - pipeline.id: main
     config.string: |

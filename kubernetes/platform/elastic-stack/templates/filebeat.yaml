@@ -11,18 +11,45 @@ spec:
         - type: kubernetes
           node: ${NODE_NAME}
           hints.enabled: true
+          hints.default_config:
+            type: container
+            paths:
+              - /var/log/containers/*${data.kubernetes.container.id}.log
+    filebeat.inputs:
+    - type: filestream
+      id: kubernetes-container-logs
+      paths:
+        - /var/log/containers/*.log
+      prospector:
+        scanner:
+          fingerprint.enabled: true
+          check_interval: 1s
+      parsers:
+        - container: {}
+      ignore_older: 24h
     processors:
       - add_cloud_metadata: {}
       - add_host_metadata: {}
+      - add_kubernetes_metadata:
+          host: ${NODE_NAME}
+          matchers:
+          - logs_path:
+              logs_path: /var/log/containers/
     logging.level: info
+    logging.to_stderr: true
     output.logstash:
-      hosts: ["logstash-beats:5044"]
+      hosts: ["logstash-ls-beats:5044"]
+      loadbalance: true
+      worker: 2
+      bulk_max_size: 2048
   daemonSet:
     podTemplate:
       spec:
         serviceAccountName: filebeat
         automountServiceAccountToken: true
         terminationGracePeriodSeconds: 30
+        dnsPolicy: ClusterFirstWithHostNet
+        hostNetwork: false
         containers:
         - name: filebeat
           securityContext:
@@ -34,7 +61,7 @@ spec:
                 - DAC_OVERRIDE
           resources:
             limits:
-              memory: "200Mi"
+              memory: "300Mi"
               cpu: "200m"
             requests:
               memory: "100Mi"
@@ -87,6 +114,9 @@ rules:
 - apiGroups: ["apps"]
   resources:
   - replicasets
+  - deployments
+  - statefulsets
+  - daemonsets
   verbs:
   - get
   - watch
@@ -94,6 +124,7 @@ rules:
 - apiGroups: ["batch"]
   resources:
   - jobs
+  - cronjobs
   verbs:
   - get
   - watch

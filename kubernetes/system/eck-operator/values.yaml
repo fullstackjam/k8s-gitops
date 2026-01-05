@@ -1,3 +1,11 @@
 eck-operator:
   installCRDs: true
-  managedNamespaces: []
+  managedNamespaces:
+    - elastic-stack
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi

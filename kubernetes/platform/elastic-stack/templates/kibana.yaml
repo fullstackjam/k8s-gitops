@@ -21,6 +21,13 @@ spec:
         env:
         - name: NODE_OPTIONS
           value: "--max-old-space-size=512"
+        readinessProbe:
+          httpGet:
+            path: /api/status
+            port: 5601
+            scheme: HTTPS
+          initialDelaySeconds: 30
+          periodSeconds: 10
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -30,6 +37,9 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     external-dns.alpha.kubernetes.io/target: "homelab-tunnel.fullstackjam.com"
     external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/ssl-passthrough: "false"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
 spec:
   ingressClassName: nginx
   tls:
