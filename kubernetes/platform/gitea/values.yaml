@@ -17,7 +17,7 @@ gitea:
           - *host
   gitea:
     image:
-      tag: 1.19.3
+      tag: 1.22.6
     admin:
       existingSecret: gitea-admin-secret
     config:
@@ -37,7 +37,10 @@ gitea:
       #   USERNAME: userid
       service.explore:
         DISABLE_USERS_PAGE: true
-      actions:
-        ENABLED: false
       webhook:
         ALLOWED_HOST_LIST: private
+
+valkey:
+  enabled: true
+valkey-cluster:
+  enabled: false
