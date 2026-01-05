@@ -24,12 +24,6 @@ app-template:
           retries: 10
           protocol: quic
           ingress:
-            - hostname: 'traefik.fullstackjam.com'
-              service: https://traefik.traefik:443
-              originRequest:
-                noTLSVerify: true
-                keepAlive-connections: 100
-                keepAlive-timeout: 30s
             - hostname: '*.fullstackjam.com'
               service: https://ingress-nginx-controller.ingress-nginx
               originRequest:
