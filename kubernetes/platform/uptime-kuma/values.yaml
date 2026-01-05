@@ -17,5 +17,17 @@ uptime-kuma:
         secretName: uptime-kuma-tls-certificate
   image:
     tag: latest
-serviceMonitor:
-  enabled: true
+  mariadb:
+    enabled: true
+    architecture: standalone
+    auth:
+      database: uptime_kuma
+      username: uptime_kuma
+      password: "uptime-kuma-db-password"
+      rootPassword: "uptime-kuma-root-password"
+    primary:
+      persistence:
+        enabled: true
+        size: 8Gi
+  serviceMonitor:
+    enabled: true
