@@ -3,14 +3,14 @@ traefik:
     enabled: true
     replicas: 3
 
-  # Disable Ingress support
+  # Enable Ingress support with nginx as main ingress
   ingressClass:
     enabled: false
 
-  # Enable Gateway API provider
+  # Disable Gateway API provider - using nginx Ingress instead
   providers:
     kubernetesGateway:
-      enabled: true
+      enabled: false
 
   # Configure entry points
   ports:
@@ -29,33 +29,12 @@ traefik:
       enabled: true
       entryPoints: ["traefik"]
 
-  # Gateway API configuration
+  # Disable Gateway API configuration
   gatewayClass:
-    enabled: true
-    name: traefik
+    enabled: false
 
   gateway:
-    enabled: true
-    name: traefik-gateway
-    annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-prod
-      external-dns.alpha.kubernetes.io/target: "homelab-tunnel.fullstackjam.com"
-      external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
-    listeners:
-      web:
-        port: 8000
-        protocol: HTTP
-        namespacePolicy:
-          from: All
-      websecure:
-        port: 8443
-        protocol: HTTPS
-        hostname: traefik.fullstackjam.com
-        namespacePolicy:
-          from: All
-        certificateRefs:
-          - name: traefik-tls-certificate
-            kind: Secret
+    enabled: false
 
   # Enable metrics for Prometheus
   metrics:
@@ -70,7 +49,7 @@ traefik:
     enabled: true
     type: LoadBalancer
 
-  # Extra objects to deploy - Certificate and HTTPRoute for Gateway
+  # Extra objects to deploy - Certificate and Ingress for dashboard
   extraObjects:
     - apiVersion: cert-manager.io/v1
       kind: Certificate
@@ -85,8 +64,8 @@ traefik:
         dnsNames:
           - traefik.fullstackjam.com
 
-    - apiVersion: gateway.networking.k8s.io/v1
-      kind: HTTPRoute
+    - apiVersion: networking.k8s.io/v1
+      kind: Ingress
       metadata:
         name: traefik-dashboard
         namespace: traefik
@@ -94,26 +73,26 @@ traefik:
           external-dns.alpha.kubernetes.io/target: "homelab-tunnel.fullstackjam.com"
           external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
       spec:
-        parentRefs:
-          - name: traefik-gateway
-            namespace: traefik
-            sectionName: websecure
-        hostnames:
-          - traefik.fullstackjam.com
+        ingressClassName: nginx
+        tls:
+          - hosts:
+              - traefik.fullstackjam.com
+            secretName: traefik-tls-certificate
         rules:
-          - matches:
-              - path:
-                  type: PathPrefix
-                  value: /dashboard
-            backendRefs:
-              - name: api@internal
-                group: traefik.io
-                kind: TraefikService
-          - matches:
-              - path:
-                  type: PathPrefix
-                  value: /api
-            backendRefs:
-              - name: api@internal
-                group: traefik.io
-                kind: TraefikService
+          - host: traefik.fullstackjam.com
+            http:
+              paths:
+                - path: /dashboard
+                  pathType: Prefix
+                  backend:
+                    service:
+                      name: traefik
+                      port:
+                        number: 9000
+                - path: /api
+                  pathType: Prefix
+                  backend:
+                    service:
+                      name: traefik
+                      port:
+                        number: 9000

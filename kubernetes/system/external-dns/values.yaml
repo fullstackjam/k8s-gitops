@@ -4,7 +4,6 @@ external-dns:
   sources:
     - ingress
     - service
-    - gateway-httproute
   txtOwnerId: homelab
   env:
     - name: CF_API_TOKEN
