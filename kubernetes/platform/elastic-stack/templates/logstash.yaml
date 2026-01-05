@@ -55,6 +55,10 @@ spec:
       }
       output {
         elasticsearch {
+          hosts => ["${ELASTICSEARCH_ES_HOSTS}"]
+          user => "${ELASTICSEARCH_ES_USER}"
+          password => "${ELASTICSEARCH_ES_PASSWORD}"
+          ssl_certificate_authorities => ["${ELASTICSEARCH_ES_SSL_CERTIFICATE_AUTHORITY}"]
           index => "filebeat-%{[@metadata][index_suffix]}-%{+YYYY.MM.dd}"
         }
       }
