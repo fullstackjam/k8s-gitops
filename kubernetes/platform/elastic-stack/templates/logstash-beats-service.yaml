@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: logstash-beats
+  labels:
+    app: logstash
+    logstash.k8s.elastic.co/name: logstash
+spec:
+  ports:
+  - port: 5044
+    protocol: TCP
+    targetPort: 5044
+    name: beats
+  selector:
+    logstash.k8s.elastic.co/name: logstash
+  type: ClusterIP

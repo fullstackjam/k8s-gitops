@@ -16,7 +16,7 @@ spec:
       - add_host_metadata: {}
     logging.level: info
     output.logstash:
-      hosts: ["logstash-ls-beats:5044"]
+      hosts: ["logstash-beats:5044"]
   daemonSet:
     podTemplate:
       spec:
