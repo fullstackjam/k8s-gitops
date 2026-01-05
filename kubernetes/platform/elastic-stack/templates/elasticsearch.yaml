@@ -3,7 +3,10 @@ kind: Elasticsearch
 metadata:
   name: elasticsearch
 spec:
-  version: 8.16.1
+  version: 9.0.2
+  auth:
+    roles:
+      - secretName: elasticsearch-roles
   nodeSets:
   - name: default
     count: 3
@@ -12,7 +15,6 @@ spec:
       xpack.security.enabled: true
       xpack.security.transport.ssl.enabled: true
       xpack.security.http.ssl.enabled: true
-      action.auto_create_index: "filebeat-*,kibana-*,.kibana*,.monitoring-*,.watches,.watcher-history-*"
     podTemplate:
       spec:
         affinity:
@@ -62,3 +64,27 @@ spec:
   selector:
     matchLabels:
       elasticsearch.k8s.elastic.co/cluster-name: elasticsearch
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: elasticsearch-roles
+stringData:
+  roles.yml: |
+    eck_logstash_user_role:
+      cluster:
+        - monitor
+        - manage_index_templates
+        - manage_ilm
+      indices:
+        - names:
+            - 'filebeat-*'
+            - 'logs-*'
+            - 'metrics-*'
+          privileges:
+            - write
+            - create_index
+            - auto_configure
+            - manage
+            - read
+            - view_index_metadata

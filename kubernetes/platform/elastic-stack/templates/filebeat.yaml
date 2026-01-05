@@ -4,7 +4,7 @@ metadata:
   name: filebeat
 spec:
   type: filebeat
-  version: 8.16.1
+  version: 9.0.2
   config:
     filebeat.autodiscover:
       providers:
