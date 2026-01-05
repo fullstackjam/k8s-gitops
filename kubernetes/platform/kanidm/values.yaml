@@ -3,7 +3,7 @@ app-template:
     kanidm:
       type: statefulset
       containers:
-        kanidm:
+        app:
           image:
             repository: docker.io/kanidm/server
             tag: 1.6.1
@@ -13,10 +13,10 @@ app-template:
             size: 1Gi
             globalMounts:
               - path: /data
-            accessMode: "ReadWriteOnce"
+            accessMode: ReadWriteOnce
+
   configMaps:
     config:
-      enabled: true
       data:
         server.toml: |
           bindaddress = "[::]:443"
@@ -27,27 +27,24 @@ app-template:
           tls_key = "/data/tls.key"
           domain = "auth.fullstackjam.com"
           origin = "https://auth.fullstackjam.com"
+
   service:
-    kanidm:
+    app:
       controller: kanidm
       ports:
-        http:
-          enabled: false
-          port: 80
-          protocol: HTTP
         https:
           port: 443
           protocol: HTTPS
         ldap:
           port: 636
           protocol: TCP
+
   ingress:
-    kanidm:
-      enabled: true
+    app:
       className: nginx
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
-        external-dns.alpha.kubernetes.io/target: "homelab-tunnel.fullstackjam.com"
+        external-dns.alpha.kubernetes.io/target: homelab-tunnel.fullstackjam.com
         external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
         nginx.ingress.kubernetes.io/backend-protocol: HTTPS
       hosts:
@@ -56,22 +53,21 @@ app-template:
             - path: /
               pathType: Prefix
               service:
-                name: kanidm
-                port: 443
+                identifier: app
+                port: https
       tls:
         - hosts:
             - *host
           secretName: kanidm-tls-certificate
+
   persistence:
     config:
-      enabled: true
       type: configMap
-      name: kanidm-config
+      identifier: config
       globalMounts:
         - path: /data/server.toml
           subPath: server.toml
     tls:
-      enabled: true
       type: secret
       name: kanidm-selfsigned-certificate
       globalMounts:

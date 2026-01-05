@@ -11,9 +11,9 @@ app-template:
             - tunnel
             - run
             - --protocol=quic
+
   configMaps:
     config:
-      enabled: true
       data:
         config.yaml: |
           tunnel: homelab
@@ -24,14 +24,12 @@ app-template:
           retries: 10
           protocol: quic
           ingress:
-            # Route traefik.fullstackjam.com to Traefik
             - hostname: 'traefik.fullstackjam.com'
               service: https://traefik.traefik:443
               originRequest:
                 noTLSVerify: true
                 keepAlive-connections: 100
                 keepAlive-timeout: 30s
-            # Route all other *.fullstackjam.com to ingress-nginx
             - hostname: '*.fullstackjam.com'
               service: https://ingress-nginx-controller.ingress-nginx
               originRequest:
@@ -39,16 +37,15 @@ app-template:
                 keepAlive-connections: 100
                 keepAlive-timeout: 30s
             - service: http_status:404
+
   persistence:
     config:
-      enabled: true
       type: configMap
-      name: cloudflared-config
+      identifier: config
       globalMounts:
         - path: /etc/cloudflared/config.yaml
           subPath: config.yaml
     credentials:
-      enabled: true
       type: secret
       name: cloudflared-credentials
       globalMounts:
