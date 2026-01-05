@@ -3,7 +3,7 @@ kind: Logstash
 metadata:
   name: logstash
 spec:
-  version: 8.19.9
+  version: 9.2.3
   count: 1
   elasticsearchRefs:
   - name: elasticsearch
