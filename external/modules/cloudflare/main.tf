@@ -25,7 +25,7 @@ resource "cloudflare_record" "tunnel" {
   ttl     = 1 # Auto
 }
 
-resource "kubernetes_secret" "cloudflared_credentials" {
+resource "kubernetes_secret_v1" "cloudflared_credentials" {
   metadata {
     name      = "cloudflared-credentials"
     namespace = "cloudflared"
@@ -59,7 +59,7 @@ resource "cloudflare_api_token" "external_dns" {
   }
 }
 
-resource "kubernetes_secret" "external_dns_token" {
+resource "kubernetes_secret_v1" "external_dns_token" {
   metadata {
     name      = "cloudflare-api-token"
     namespace = "external-dns"
@@ -88,7 +88,7 @@ resource "cloudflare_api_token" "cert_manager" {
   }
 }
 
-resource "kubernetes_secret" "cert_manager_token" {
+resource "kubernetes_secret_v1" "cert_manager_token" {
   metadata {
     name      = "cloudflare-api-token"
     namespace = "cert-manager"
