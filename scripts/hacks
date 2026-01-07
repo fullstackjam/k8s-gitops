@@ -1,37 +1,49 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """
-Quick and dirty script for things that I can't/don't have time to do properly yet
-TODO: retire this script
+Automation script for setting up OAuth applications and authentication sources.
+
+This script handles:
+- Gitea OAuth applications (for Woodpecker CI, etc.)
+- Gitea authentication with Dex
+- Kanidm OAuth applications and groups
+- Secret management in global-secrets namespace
+
+Usage:
+    python3 scripts/hacks [--dry-run] [--skip-kanidm]
+
+Options:
+    --dry-run       Show what would be done without making changes
+    --skip-kanidm   Skip Kanidm-related setup
 """
 
+import argparse
 import base64
 import json
-import json
+import logging
 import pexpect
 import requests
-import logging
 import subprocess
 import sys
-import urllib
+import time
+import urllib3
 
+from typing import Optional
 from rich.console import Console
 from kubernetes import client, config
 from kubernetes.stream import stream
 
-# https://git.fullstackjam.com/user/settings/applications
-# Doing this properly inside the cluster requires:
-# - Kubernetes service account
-config.load_config()
+# Suppress SSL warnings for self-signed certificates
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-gitea_host = client.NetworkingV1Api().read_namespaced_ingress('gitea', 'gitea').spec.rules[0].host
-gitea_user_secret = client.CoreV1Api().read_namespaced_secret('gitea-admin-secret', 'gitea')
-gitea_user = base64.b64decode(gitea_user_secret.data['username']).decode("utf-8")
-gitea_pass = base64.b64decode(gitea_user_secret.data['password']).decode("utf-8")
-gitea_url = f"https://{gitea_host}"
+# Load kubeconfig
+try:
+    config.load_config()
+except Exception as e:
+    print(f"Error loading kubeconfig: {e}")
+    sys.exit(1)
 
-kanidm_host = client.NetworkingV1Api().read_namespaced_ingress('kanidm', 'kanidm').spec.rules[0].host
-
+# Configure logging
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
@@ -42,8 +54,68 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
+# Global configuration
+DRY_RUN = False
+SKIP_KANIDM = False
+
+
+def get_gitea_config() -> dict:
+    """Get Gitea configuration from Kubernetes resources."""
+    try:
+        gitea_host = client.NetworkingV1Api().read_namespaced_ingress('gitea', 'gitea').spec.rules[0].host
+        gitea_user_secret = client.CoreV1Api().read_namespaced_secret('gitea-admin-secret', 'gitea')
+        gitea_user = base64.b64decode(gitea_user_secret.data['username']).decode("utf-8")
+        gitea_pass = base64.b64decode(gitea_user_secret.data['password']).decode("utf-8")
+        return {
+            'host': gitea_host,
+            'url': f"https://{gitea_host}",
+            'user': gitea_user,
+            'pass': gitea_pass
+        }
+    except Exception as e:
+        logger.error(f"Failed to get Gitea configuration: {e}")
+        sys.exit(1)
+
+
+def get_kanidm_config() -> dict:
+    """Get Kanidm configuration from Kubernetes resources."""
+    try:
+        kanidm_host = client.NetworkingV1Api().read_namespaced_ingress('kanidm', 'kanidm').spec.rules[0].host
+        return {
+            'host': kanidm_host,
+            'url': f"https://{kanidm_host}"
+        }
+    except Exception as e:
+        logger.error(f"Failed to get Kanidm configuration: {e}")
+        return None
+
+
+def wait_for_gitea_ready(gitea_url: str, max_retries: int = 30, retry_delay: int = 2) -> bool:
+    """Wait for Gitea to be ready and responsive."""
+    logger.info("Waiting for Gitea to be ready...")
+    for i in range(max_retries):
+        try:
+            resp = requests.get(f"{gitea_url}/api/v1/version", timeout=5, verify=False)
+            if resp.status_code == 200:
+                logger.info("Gitea is ready")
+                return True
+        except requests.exceptions.RequestException:
+            pass
+        
+        if i < max_retries - 1:
+            logger.debug(f"Gitea not ready yet, retrying in {retry_delay}s... ({i+1}/{max_retries})")
+            time.sleep(retry_delay)
+    
+    logger.error("Gitea is not ready after waiting")
+    return False
+
 
 def apply_secret(name: str, namespace: str, data: dict) -> None:
+    """Create or update a Kubernetes secret."""
+    if DRY_RUN:
+        logger.info(f"[DRY RUN] Would apply secret '{name}' in namespace '{namespace}' with keys: {list(data.keys())}")
+        return
+    
     try:
         logger.info(f"Applying secret '{name}' in namespace '{namespace}'")
         client.CoreV1Api().read_namespaced_secret(name, namespace)
@@ -53,210 +125,467 @@ def apply_secret(name: str, namespace: str, data: dict) -> None:
         )
         client.CoreV1Api().replace_namespaced_secret(name, namespace, patch_body)
         logger.info(f"Secret '{name}' updated successfully")
-    except client.exceptions.ApiException:
-        logger.warning(f"Secret '{name}' not found, creating a new one")
-        new_secret = client.V1Secret(
-            metadata=client.V1ObjectMeta(name=name),
-            data=data,
-        )
-        client.CoreV1Api().create_namespaced_secret(namespace, new_secret)
-        logger.info(f"Secret '{name}' created successfully")
-
-def setup_gitea_access_token(name: str, scopes: list[str]) -> None:
-    logger.info(f"Setting up Gitea access token '{name}' with scopes {scopes}")
-    current_tokens = requests.get(
-        url=f"{gitea_url}/api/v1/users/{gitea_user}/tokens",
-        auth=(gitea_user, gitea_pass),
-    ).json()
-
-    if not any(token['name'] == name for token in current_tokens):
-        resp = requests.post(
-            url=f"{gitea_url}/api/v1/users/{gitea_user}/tokens",
-            auth=(gitea_user, gitea_pass),
-            headers={
-                'Content-Type': 'application/json'
-            },
-            data=json.dumps({
-                'name': name,
-                'scopes': scopes
-            })
-        )
-
-        if resp.status_code == 201:
-            logger.info(f"Access token '{name}' created successfully")
-            apply_secret(
-                f"gitea.{name}",
-                "global-secrets",
-                {
-                    'token': base64.b64encode(resp.json()['sha1'].encode("utf-8")).decode("utf-8")
-                }
+    except client.exceptions.ApiException as e:
+        if e.status == 404:
+            logger.info(f"Secret '{name}' not found, creating a new one")
+            new_secret = client.V1Secret(
+                metadata=client.V1ObjectMeta(name=name),
+                data=data,
             )
+            client.CoreV1Api().create_namespaced_secret(namespace, new_secret)
+            logger.info(f"Secret '{name}' created successfully")
         else:
-            logger.error(f"Error creating access token '{name}' ({resp.status_code}): {resp.content}")
-            sys.exit(1)
-    else:
-        logger.info(f"Access token '{name}' already exists")
+            logger.error(f"Failed to apply secret '{name}': {e}")
+            raise
 
 
-def setup_gitea_oauth_app(name: str, redirect_uri: str) -> None:
-    logger.info(f"Setting up Gitea OAuth app '{name}' with redirect URI '{redirect_uri}'")
-    current_apps = requests.get(
-        url=f"{gitea_url}/api/v1/user/applications/oauth2",
-        auth=(gitea_user, gitea_pass),
-    ).json()
-
-    if not any(app['name'] == name for app in current_apps):
-        resp = requests.post(
-            url=f"{gitea_url}/api/v1/user/applications/oauth2",
-            auth=(gitea_user, gitea_pass),
-            headers={
-                'Content-Type': 'application/json'
-            },
-            data=json.dumps({
-                'name': name,
-                'redirect_uris': [redirect_uri],
-                'confidential_client': True
-            })
-        )
-
-        if resp.status_code == 201:
-            logger.info(f"OAuth app '{name}' created successfully")
-            apply_secret(
-                f"gitea.{name}",
-                "global-secrets",
-                {
-                    'client_id': base64.b64encode(resp.json()['client_id'].encode("utf-8")).decode("utf-8"),
-                    'client_secret': base64.b64encode(resp.json()['client_secret'].encode("utf-8")).decode("utf-8"),
-                }
-            )
-        else:
-            logger.error(f"Error creating OAuth app '{name}' ({resp.status_code}): {resp.content}")
-            sys.exit(1)
-
-def setup_gitea_auth_with_dex():
-    gitea_pod = client.CoreV1Api().list_namespaced_pod(namespace='gitea', label_selector='app=gitea').items[0].metadata.name
-    client_secret = base64.b64decode(
-        client.CoreV1Api().read_namespaced_secret('dex.gitea', 'global-secrets').data['client_secret']
-    ).decode("utf-8")
-    discovery_url = f"https://{client.NetworkingV1Api().read_namespaced_ingress('dex', 'dex').spec.rules[0].host}/.well-known/openid-configuration"
-
-    # TODO currently there's no API to add new authentication sources in Gitea,
-    # so we have to workaround by running Gitea CLI in a Gitea pod.
-    stream(
-        client.CoreV1Api().connect_get_namespaced_pod_exec,
-        gitea_pod,
-        'gitea',
-        command=[
-            'gitea', 'admin', 'auth', 'add-oauth',
-            '--name', 'Dex',
-            '--provider', 'openidConnect',
-            '--key', 'gitea',
-            '--secret', client_secret,
-            '--auto-discover-url', discovery_url
-        ],
-        stderr=True, stdin=False,
-        stdout=False, tty=False
-    )
-
-def reset_kanidm_account_password(account: str) -> str:
-    resp = stream(
-        client.CoreV1Api().connect_get_namespaced_pod_exec,
-        'kanidm-0',
-        'kanidm',
-        command=["kanidmd", "recover-account", "--output", "json", account],
-        stderr=False, stdin=False,
-        stdout=True, tty=False
-    ).splitlines()[-1]
-
-    return json.loads(resp)['password']
-
-# TODO Proper automation will be added later, waiting for client library update:
-# https://github.com/kanidm/kanidm/pull/2301
-def kanidm_login(accounts: list[str]) -> None:
-    for account in accounts:
-        password = reset_kanidm_account_password(account)
-
-        # There's no way to input password using the standard library, so we have to use pexpect
-        # https://stackoverflow.com/questions/2387731/use-subprocess-to-send-a-password
-        cli_login = pexpect.spawn(f"kanidm login --url https://{kanidm_host} --name {account}")
-        cli_login.sendline(password)
-        cli_login.read()
-
-def setup_kanidm_group(name: str) -> None:
-    subprocess.run(
-        ["kanidm", "group", "create", "--url", f"https://{kanidm_host}", "--name", "idm_admin", name],
-        capture_output=True,
-    )
-
-def setup_kanidm_oauth_app(name: str, redirect_uri: str) -> None:
+def force_external_secret_sync(name: str, namespace: str) -> None:
+    """Force an ExternalSecret to sync immediately."""
+    if DRY_RUN:
+        logger.info(f"[DRY RUN] Would force sync ExternalSecret '{name}' in namespace '{namespace}'")
+        return
+    
     try:
+        logger.info(f"Forcing sync for ExternalSecret '{name}' in namespace '{namespace}'")
+        # Annotate with current timestamp to trigger reconciliation
+        annotation = f'{{"metadata":{{"annotations":{{"force-sync":"{int(time.time())}"}}}}}}'
         subprocess.run(
-            ["kanidm", "system", "oauth2", "create", "--url", f"https://{kanidm_host}", "--name", "idm_admin", name, name, redirect_uri],
+            ["kubectl", "patch", "externalsecret", name, "-n", namespace, "--type=merge", "-p", annotation],
+            check=True,
+            capture_output=True
+        )
+        time.sleep(3)  # Wait for sync to complete
+        logger.info(f"ExternalSecret '{name}' sync triggered")
+    except subprocess.CalledProcessError as e:
+        logger.warning(f"Failed to force sync ExternalSecret '{name}': {e.stderr.decode()}")
+
+
+def setup_gitea_access_token(gitea_config: dict, name: str, scopes: list[str]) -> None:
+    """Create a Gitea access token if it doesn't exist."""
+    logger.info(f"Setting up Gitea access token '{name}' with scopes {scopes}")
+    
+    if DRY_RUN:
+        logger.info(f"[DRY RUN] Would create Gitea access token '{name}'")
+        return
+    
+    try:
+        current_tokens = requests.get(
+            url=f"{gitea_config['url']}/api/v1/users/{gitea_config['user']}/tokens",
+            auth=(gitea_config['user'], gitea_config['pass']),
+            verify=False,
+            timeout=10
+        ).json()
+
+        if not any(token['name'] == name for token in current_tokens):
+            resp = requests.post(
+                url=f"{gitea_config['url']}/api/v1/users/{gitea_config['user']}/tokens",
+                auth=(gitea_config['user'], gitea_config['pass']),
+                headers={'Content-Type': 'application/json'},
+                data=json.dumps({'name': name, 'scopes': scopes}),
+                verify=False,
+                timeout=10
+            )
+
+            if resp.status_code == 201:
+                logger.info(f"Access token '{name}' created successfully")
+                apply_secret(
+                    f"gitea.{name}",
+                    "global-secrets",
+                    {'token': base64.b64encode(resp.json()['sha1'].encode("utf-8")).decode("utf-8")}
+                )
+            else:
+                logger.error(f"Error creating access token '{name}' ({resp.status_code}): {resp.text}")
+                raise Exception(f"Failed to create access token '{name}'")
+        else:
+            logger.info(f"Access token '{name}' already exists")
+    except Exception as e:
+        logger.error(f"Failed to setup Gitea access token '{name}': {e}")
+        raise
+
+
+def setup_gitea_oauth_app(gitea_config: dict, name: str, redirect_uri: str, force_recreate: bool = False) -> None:
+    """
+    Create or update a Gitea OAuth application.
+    
+    Args:
+        gitea_config: Gitea configuration dictionary
+        name: OAuth application name
+        redirect_uri: OAuth redirect URI
+        force_recreate: If True, delete and recreate the app if it exists
+    """
+    logger.info(f"Setting up Gitea OAuth app '{name}' with redirect URI '{redirect_uri}'")
+    
+    if DRY_RUN:
+        logger.info(f"[DRY RUN] Would create Gitea OAuth app '{name}'")
+        return
+    
+    try:
+        current_apps = requests.get(
+            url=f"{gitea_config['url']}/api/v1/user/applications/oauth2",
+            auth=(gitea_config['user'], gitea_config['pass']),
+            verify=False,
+            timeout=10
+        ).json()
+
+        existing_app = next((app for app in current_apps if app['name'] == name), None)
+        
+        if existing_app:
+            if force_recreate:
+                logger.info(f"OAuth app '{name}' exists, deleting and recreating...")
+                # Delete existing app
+                requests.delete(
+                    url=f"{gitea_config['url']}/api/v1/user/applications/oauth2/{existing_app['id']}",
+                    auth=(gitea_config['user'], gitea_config['pass']),
+                    verify=False,
+                    timeout=10
+                )
+                time.sleep(1)
+            else:
+                logger.info(f"OAuth app '{name}' already exists (ID: {existing_app['id']})")
+                # Verify the secret still matches what we have stored
+                stored_secret = client.CoreV1Api().read_namespaced_secret(f"gitea.{name}", "global-secrets")
+                stored_client_id = base64.b64decode(stored_secret.data['client_id']).decode("utf-8")
+                
+                if stored_client_id == existing_app['client_id']:
+                    logger.info(f"OAuth app '{name}' credentials match stored secret")
+                    return
+                else:
+                    logger.warning(f"OAuth app '{name}' credentials mismatch, recreating...")
+                    force_recreate = True
+        
+        if not existing_app or force_recreate:
+            resp = requests.post(
+                url=f"{gitea_config['url']}/api/v1/user/applications/oauth2",
+                auth=(gitea_config['user'], gitea_config['pass']),
+                headers={'Content-Type': 'application/json'},
+                data=json.dumps({
+                    'name': name,
+                    'redirect_uris': [redirect_uri],
+                    'confidential_client': True
+                }),
+                verify=False,
+                timeout=10
+            )
+
+            if resp.status_code == 201:
+                logger.info(f"OAuth app '{name}' created successfully")
+                oauth_data = resp.json()
+                apply_secret(
+                    f"gitea.{name}",
+                    "global-secrets",
+                    {
+                        'client_id': base64.b64encode(oauth_data['client_id'].encode("utf-8")).decode("utf-8"),
+                        'client_secret': base64.b64encode(oauth_data['client_secret'].encode("utf-8")).decode("utf-8"),
+                    }
+                )
+                
+                # Force ExternalSecret sync to propagate changes immediately
+                logger.info(f"Triggering ExternalSecret sync for {name}...")
+                force_external_secret_sync(f"{name}-secret", name)
+                
+            else:
+                logger.error(f"Error creating OAuth app '{name}' ({resp.status_code}): {resp.text}")
+                raise Exception(f"Failed to create OAuth app '{name}'")
+                
+    except Exception as e:
+        logger.error(f"Failed to setup Gitea OAuth app '{name}': {e}")
+        raise
+
+
+def setup_gitea_auth_with_dex(gitea_config: dict) -> None:
+    """Configure Gitea to use Dex as an authentication source."""
+    logger.info("Setting up Gitea authentication with Dex")
+    
+    if DRY_RUN:
+        logger.info("[DRY RUN] Would configure Gitea authentication with Dex")
+        return
+    
+    try:
+        gitea_pods = client.CoreV1Api().list_namespaced_pod(
+            namespace='gitea', 
+            label_selector='app=gitea'
+        ).items
+        
+        if not gitea_pods:
+            logger.error("No Gitea pods found")
+            return
+        
+        gitea_pod = gitea_pods[0].metadata.name
+        
+        client_secret = base64.b64decode(
+            client.CoreV1Api().read_namespaced_secret('dex.gitea', 'global-secrets').data['client_secret']
+        ).decode("utf-8")
+        
+        dex_ingress = client.NetworkingV1Api().read_namespaced_ingress('dex', 'dex')
+        discovery_url = f"https://{dex_ingress.spec.rules[0].host}/.well-known/openid-configuration"
+
+        # Check if Dex auth source already exists
+        check_cmd = ['gitea', 'admin', 'auth', 'list']
+        output = stream(
+            client.CoreV1Api().connect_get_namespaced_pod_exec,
+            gitea_pod,
+            'gitea',
+            command=check_cmd,
+            stderr=False, stdin=False,
+            stdout=True, tty=False
+        )
+        
+        if 'Dex' in output:
+            logger.info("Dex authentication source already configured in Gitea")
+            return
+
+        # Add Dex as authentication source
+        stream(
+            client.CoreV1Api().connect_get_namespaced_pod_exec,
+            gitea_pod,
+            'gitea',
+            command=[
+                'gitea', 'admin', 'auth', 'add-oauth',
+                '--name', 'Dex',
+                '--provider', 'openidConnect',
+                '--key', 'gitea',
+                '--secret', client_secret,
+                '--auto-discover-url', discovery_url
+            ],
+            stderr=True, stdin=False,
+            stdout=False, tty=False
+        )
+        
+        logger.info("Dex authentication source added to Gitea successfully")
+        
+    except Exception as e:
+        logger.error(f"Failed to setup Gitea authentication with Dex: {e}")
+        # Don't raise - this is not critical
+
+
+def reset_kanidm_account_password(account: str) -> Optional[str]:
+    """Reset Kanidm account password and return the new password."""
+    if SKIP_KANIDM or DRY_RUN:
+        return None
+    
+    try:
+        resp = stream(
+            client.CoreV1Api().connect_get_namespaced_pod_exec,
+            'kanidm-0',
+            'kanidm',
+            command=["kanidmd", "recover-account", "--output", "json", account],
+            stderr=False, stdin=False,
+            stdout=True, tty=False
+        ).splitlines()[-1]
+
+        return json.loads(resp)['password']
+    except Exception as e:
+        logger.error(f"Failed to reset Kanidm password for '{account}': {e}")
+        return None
+
+
+def kanidm_login(kanidm_config: dict, accounts: list[str]) -> None:
+    """Login to Kanidm CLI for specified accounts."""
+    if SKIP_KANIDM:
+        logger.info("Skipping Kanidm login (--skip-kanidm)")
+        return
+    
+    if DRY_RUN:
+        logger.info(f"[DRY RUN] Would login to Kanidm for accounts: {accounts}")
+        return
+    
+    for account in accounts:
+        try:
+            password = reset_kanidm_account_password(account)
+            if not password:
+                logger.warning(f"Skipping Kanidm login for '{account}' (no password)")
+                continue
+
+            # Use pexpect for interactive password input
+            cli_login = pexpect.spawn(f"kanidm login --url {kanidm_config['url']} --name {account}")
+            cli_login.sendline(password)
+            cli_login.read()
+            logger.info(f"Logged in to Kanidm as '{account}'")
+        except Exception as e:
+            logger.error(f"Failed to login to Kanidm as '{account}': {e}")
+
+
+def setup_kanidm_group(kanidm_config: dict, name: str) -> None:
+    """Create a Kanidm group if it doesn't exist."""
+    if SKIP_KANIDM:
+        return
+    
+    if DRY_RUN:
+        logger.info(f"[DRY RUN] Would create Kanidm group '{name}'")
+        return
+    
+    try:
+        result = subprocess.run(
+            ["kanidm", "group", "create", "--url", kanidm_config['url'], "--name", "idm_admin", name],
+            capture_output=True,
+            text=True
+        )
+        if result.returncode == 0:
+            logger.info(f"Kanidm group '{name}' created successfully")
+        else:
+            logger.info(f"Kanidm group '{name}' may already exist")
+    except Exception as e:
+        logger.error(f"Failed to create Kanidm group '{name}': {e}")
+
+
+def setup_kanidm_oauth_app(kanidm_config: dict, name: str, redirect_uri: str) -> None:
+    """Create and configure a Kanidm OAuth application."""
+    if SKIP_KANIDM:
+        return
+    
+    if DRY_RUN:
+        logger.info(f"[DRY RUN] Would create Kanidm OAuth app '{name}'")
+        return
+    
+    try:
+        # Create OAuth app
+        subprocess.run(
+            ["kanidm", "system", "oauth2", "create", "--url", kanidm_config['url'], 
+             "--name", "idm_admin", name, name, redirect_uri],
             capture_output=True,
             check=True,
         )
+        logger.info(f"Kanidm OAuth app '{name}' created")
     except subprocess.CalledProcessError:
-        return
+        logger.info(f"Kanidm OAuth app '{name}' may already exist")
 
-    # TODO https://github.com/dexidp/dex/pull/3188
-    subprocess.run(
-        ["kanidm", "system", "oauth2", "warning-insecure-client-disable-pkce", "--url", f"https://{kanidm_host}", "--name", "idm_admin", name],
-        capture_output=True,
-        check=True,
-    )
+    try:
+        # Disable PKCE (workaround for Dex compatibility)
+        # TODO: Remove when https://github.com/dexidp/dex/pull/3188 is merged
+        subprocess.run(
+            ["kanidm", "system", "oauth2", "warning-insecure-client-disable-pkce", 
+             "--url", kanidm_config['url'], "--name", "idm_admin", name],
+            capture_output=True,
+            check=True,
+        )
 
-    subprocess.run(
-        # TODO better group management
-        ["kanidm", "system", "oauth2", "create-scope-map", "--url", f"https://{kanidm_host}", "--name", "idm_admin", name, "editor", "openid", "profile", "email", "groups"],
-        capture_output=True,
-        check=True,
-    )
+        # Create scope map
+        subprocess.run(
+            ["kanidm", "system", "oauth2", "create-scope-map", 
+             "--url", kanidm_config['url'], "--name", "idm_admin", 
+             name, "editor", "openid", "profile", "email", "groups"],
+            capture_output=True,
+            check=True,
+        )
 
-    client_secret = json.loads(subprocess.run(
-        ["kanidm", "system", "oauth2", "show-basic-secret", "--url", f"https://{kanidm_host}", "--name", "idm_admin", "--output", "json", name],
-        capture_output=True,
-        check=True,
-    ).stdout.decode("utf-8"))['secret']
+        # Get client secret
+        result = subprocess.run(
+            ["kanidm", "system", "oauth2", "show-basic-secret", 
+             "--url", kanidm_config['url'], "--name", "idm_admin", 
+             "--output", "json", name],
+            capture_output=True,
+            check=True,
+        )
+        
+        client_secret = json.loads(result.stdout.decode("utf-8"))['secret']
 
-    apply_secret(
-        f"kanidm.{name}",
-        "global-secrets",
-        {
-            'client_id': base64.b64encode(name.encode("utf-8")).decode("utf-8"),
-            'client_secret': base64.b64encode(client_secret.encode("utf-8")).decode("utf-8"),
-        }
-    )
+        apply_secret(
+            f"kanidm.{name}",
+            "global-secrets",
+            {
+                'client_id': base64.b64encode(name.encode("utf-8")).decode("utf-8"),
+                'client_secret': base64.b64encode(client_secret.encode("utf-8")).decode("utf-8"),
+            }
+        )
+        
+        logger.info(f"Kanidm OAuth app '{name}' configured successfully")
+        
+    except subprocess.CalledProcessError as e:
+        logger.error(f"Failed to configure Kanidm OAuth app '{name}': {e.stderr.decode()}")
+
 
 def main() -> None:
-    logger.info("Starting the script")
-    with Console().status("Completing the remaining sorcery"):
+    """Main execution function."""
+    global DRY_RUN, SKIP_KANIDM
+    
+    # Parse command line arguments
+    parser = argparse.ArgumentParser(
+        description='Setup OAuth applications and authentication sources',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=__doc__
+    )
+    parser.add_argument('--dry-run', action='store_true', 
+                       help='Show what would be done without making changes')
+    parser.add_argument('--skip-kanidm', action='store_true',
+                       help='Skip Kanidm-related setup')
+    args = parser.parse_args()
+    
+    DRY_RUN = args.dry_run
+    SKIP_KANIDM = args.skip_kanidm
+    
+    if DRY_RUN:
+        logger.info("Running in DRY RUN mode - no changes will be made")
+    
+    logger.info("Starting OAuth and authentication setup")
+    
+    try:
+        # Get configurations
+        gitea_config = get_gitea_config()
+        kanidm_config = get_kanidm_config() if not SKIP_KANIDM else None
+        
+        # Wait for Gitea to be ready
+        if not wait_for_gitea_ready(gitea_config['url']):
+            logger.error("Gitea is not ready, aborting")
+            sys.exit(1)
+        
+        with Console().status("[bold green]Setting up OAuth applications and authentication..."):
+            
+            # Define OAuth applications to create
+            gitea_oauth_apps = [
+                {
+                    'name': 'woodpecker', 
+                    'redirect_uri': f"https://{client.NetworkingV1Api().read_namespaced_ingress('woodpecker-server', 'woodpecker').spec.rules[0].host}/authorize"
+                },
+            ]
 
-        gitea_oauth_apps = [
-            {'name': 'woodpecker', 'redirect_uri': f"https://{client.NetworkingV1Api().read_namespaced_ingress('woodpecker-server', 'woodpecker').spec.rules[0].host}/authorize"},
-        ]
+            # Setup Gitea OAuth applications
+            for app in gitea_oauth_apps:
+                try:
+                    setup_gitea_oauth_app(
+                        gitea_config, 
+                        app['name'], 
+                        app['redirect_uri'],
+                        force_recreate=False
+                    )
+                except Exception as e:
+                    logger.error(f"Failed to setup OAuth app '{app['name']}': {e}")
+                    # Continue with other apps
 
-        kanidm_groups = [
-            {'name': 'editor'},
-        ]
+            # Setup Gitea authentication with Dex
+            try:
+                setup_gitea_auth_with_dex(gitea_config)
+            except Exception as e:
+                logger.error(f"Failed to setup Dex authentication: {e}")
 
-        kanidm_oauth_apps = [
-            {'name': 'dex', 'redirect_uri': f"https://{client.NetworkingV1Api().read_namespaced_ingress('dex', 'dex').spec.rules[0].host}/callback"},
-        ]
+            # Kanidm setup
+            if not SKIP_KANIDM and kanidm_config:
+                kanidm_groups = [{'name': 'editor'}]
+                kanidm_oauth_apps = [
+                    {
+                        'name': 'dex', 
+                        'redirect_uri': f"https://{client.NetworkingV1Api().read_namespaced_ingress('dex', 'dex').spec.rules[0].host}/callback"
+                    },
+                ]
 
-        for app in gitea_oauth_apps:
-            setup_gitea_oauth_app(app['name'], app['redirect_uri'])
+                # Login to Kanidm
+                kanidm_login(kanidm_config, ["admin", "idm_admin"])
 
-        setup_gitea_auth_with_dex()
+                # Create groups
+                for group in kanidm_groups:
+                    setup_kanidm_group(kanidm_config, group['name'])
 
-        kanidm_login(["admin", "idm_admin"])
+                # Create OAuth apps
+                for app in kanidm_oauth_apps:
+                    setup_kanidm_oauth_app(kanidm_config, app['name'], app['redirect_uri'])
 
-        for group in kanidm_groups:
-            setup_kanidm_group(group['name'])
-
-        for app in kanidm_oauth_apps:
-            setup_kanidm_oauth_app(app['name'], app['redirect_uri'])
-
-    logger.info("Script completed successfully")
+        logger.info("✅ OAuth and authentication setup completed successfully")
+        
+    except KeyboardInterrupt:
+        logger.info("\nSetup interrupted by user")
+        sys.exit(130)
+    except Exception as e:
+        logger.error(f"Setup failed: {e}")
+        sys.exit(1)
 
 if __name__ == '__main__':
     main()
