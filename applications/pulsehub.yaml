@@ -5,6 +5,8 @@ metadata:
   namespace: argocd
   annotations:
     argocd-image-updater.argoproj.io/image-list: pulsehub=fullstackjam/pulsehub
+    argocd-image-updater.argoproj.io/pulsehub.helm.image-name: image.repository
+    argocd-image-updater.argoproj.io/pulsehub.helm.image-tag: image.tag
     argocd-image-updater.argoproj.io/write-back-method: argocd
     argocd-image-updater.argoproj.io/git-branch: master
     argocd-image-updater.argoproj.io/update-strategy: newest-build
