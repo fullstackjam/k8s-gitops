@@ -1,27 +1,54 @@
 data "cloudflare_zone" "zone" {
-  name = "fullstackjam.com"
+  filter = {
+    name = "fullstackjam.com"
+  }
 }
 
-data "cloudflare_api_token_permission_groups" "all" {}
+data "cloudflare_api_token_permission_groups_list" "all" {}
 
-resource "random_password" "tunnel_secret" {
-  length  = 64
-  special = false
+locals {
+  api_token_zone_permissions_groups_map = {
+    for perm in data.cloudflare_api_token_permission_groups_list.all.result :
+    perm.name => perm.id
+    if contains(perm.scopes, "com.cloudflare.api.account.zone")
+  }
 }
 
 resource "cloudflare_zero_trust_tunnel_cloudflared" "homelab" {
   account_id = var.cloudflare_account_id
   name       = "homelab"
-  secret     = base64encode(random_password.tunnel_secret.result)
+  config_src = "cloudflare"
+}
 
-  lifecycle {
-    ignore_changes = [secret]
+data "cloudflare_zero_trust_tunnel_cloudflared_token" "homelab" {
+  account_id = var.cloudflare_account_id
+  tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.homelab.id
+}
+
+resource "cloudflare_zero_trust_tunnel_cloudflared_config" "homelab" {
+  account_id = var.cloudflare_account_id
+  tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.homelab.id
+  config = {
+    ingress = [
+      {
+        hostname = "*.fullstackjam.com"
+        service  = "https://ingress-nginx-controller.ingress-nginx"
+        origin_request = {
+          no_tls_verify          = true
+          keep_alive_connections = 100
+          keep_alive_timeout     = 30
+        }
+      },
+      {
+        service = "http_status:404"
+      }
+    ]
   }
 }
 
 # Not proxied, not accessible. Just a record for auto-created CNAMEs by external-dns.
-resource "cloudflare_record" "tunnel" {
-  zone_id = data.cloudflare_zone.zone.id
+resource "cloudflare_dns_record" "tunnel" {
+  zone_id = data.cloudflare_zone.zone.zone_id
   type    = "CNAME"
   name    = "homelab-tunnel"
   content = "${cloudflare_zero_trust_tunnel_cloudflared.homelab.id}.cfargotunnel.com"
@@ -40,27 +67,23 @@ resource "kubernetes_secret_v1" "cloudflared_credentials" {
   }
 
   data = {
-    "credentials.json" = jsonencode({
-      AccountTag   = var.cloudflare_account_id
-      TunnelName   = cloudflare_zero_trust_tunnel_cloudflared.homelab.name
-      TunnelID     = cloudflare_zero_trust_tunnel_cloudflared.homelab.id
-      TunnelSecret = base64encode(random_password.tunnel_secret.result)
-    })
+    "tunnel-token" = data.cloudflare_zero_trust_tunnel_cloudflared_token.homelab.token
   }
 }
 
 resource "cloudflare_api_token" "external_dns" {
   name = "homelab_external_dns"
 
-  policy {
+  policies = [{
+    effect = "allow"
     permission_groups = [
-      data.cloudflare_api_token_permission_groups.all.zone["Zone Read"],
-      data.cloudflare_api_token_permission_groups.all.zone["DNS Write"]
+      { id = local.api_token_zone_permissions_groups_map["Zone Read"] },
+      { id = local.api_token_zone_permissions_groups_map["DNS Write"] }
     ]
-    resources = {
+    resources = jsonencode({
       "com.cloudflare.api.account.zone.*" = "*"
-    }
-  }
+    })
+  }]
 }
 
 resource "kubernetes_secret_v1" "external_dns_token" {
@@ -81,15 +104,16 @@ resource "kubernetes_secret_v1" "external_dns_token" {
 resource "cloudflare_api_token" "cert_manager" {
   name = "homelab_cert_manager"
 
-  policy {
+  policies = [{
+    effect = "allow"
     permission_groups = [
-      data.cloudflare_api_token_permission_groups.all.zone["Zone Read"],
-      data.cloudflare_api_token_permission_groups.all.zone["DNS Write"]
+      { id = local.api_token_zone_permissions_groups_map["Zone Read"] },
+      { id = local.api_token_zone_permissions_groups_map["DNS Write"] }
     ]
-    resources = {
+    resources = jsonencode({
       "com.cloudflare.api.account.zone.*" = "*"
-    }
-  }
+    })
+  }]
 }
 
 resource "kubernetes_secret_v1" "cert_manager_token" {
