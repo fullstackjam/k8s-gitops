@@ -1,14 +1,6 @@
 snapshot-controller:
   webhook:
-    securityContext:
-      capabilities:
-        add:
-          - NET_BIND_SERVICE
-        drop:
-          - ALL
-      readOnlyRootFilesystem: true
-      runAsNonRoot: true
-      runAsUser: 1000
+    enabled: false
 
 rook-ceph:
   monitoring:
