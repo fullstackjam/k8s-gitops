@@ -9,5 +9,5 @@ dependencies:
     version: v1.18.9
     repository: https://charts.rook.io/release
   - name: snapshot-controller
-    version: 5.0.1
+    version: 5.0.2
     repository: https://piraeus.io/helm-charts
