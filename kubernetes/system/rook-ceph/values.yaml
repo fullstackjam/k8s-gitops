@@ -16,7 +16,7 @@ rook-ceph-cluster:
       config:
         osd_pool_default_size: "2"
     mon:
-      count: 2
+      count: 3
     mgr:
       count: 2
     dashboard:

@@ -29,5 +29,12 @@ uptime-kuma:
       persistence:
         enabled: true
         size: 8Gi
+      resources:
+        requests:
+          cpu: 500m
+          memory: 512Mi
+        limits:
+          cpu: 1500m
+          memory: 1Gi
   serviceMonitor:
-    enabled: true
+    enabled: false
