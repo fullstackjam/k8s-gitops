@@ -7,6 +7,9 @@ KUBE_CONFIG_PATH = $(KUBECONFIG)
 
 default: bootstrap external smoke-test post-install applications
 
+secrets-init:
+	@./scripts/secrets-init
+
 metal:
 	make -C metal
 
