@@ -22,27 +22,20 @@
           packages = [
             ansible
             ansible-lint
-            bmake
             diffutils
             docker
             docker-compose
-            dyff
             git
             go
             gotestsum
-            helmfile
-            iproute2
             jq
             k9s
             kanidm
-            kube3d
             kubectl
             kubernetes-helm
             kustomize
             libisoburn
-            vim
             openssh
-            p7zip
             pre-commit
             shellcheck
             terraform # TODO replace with OpenTofu, Terraform is no longer FOSS
@@ -50,9 +43,7 @@
 
             (python3.withPackages (p: with p; [
               jinja2
-              pip
               kubernetes
-              mkdocs-material
               netaddr
               pexpect
               rich
