@@ -16,7 +16,7 @@ uptime-kuma:
           - *host
         secretName: uptime-kuma-tls-certificate
   image:
-    tag: latest
+    tag: "2.0.2"
   mariadb:
     enabled: true
     architecture: standalone
