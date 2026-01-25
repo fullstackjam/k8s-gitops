@@ -17,6 +17,9 @@ uptime-kuma:
         secretName: uptime-kuma-tls-certificate
   image:
     tag: "2.0.2"
+  podEnv:
+    - name: UPTIME_KUMA_DB_TYPE
+      value: "sqlite"
   mariadb:
     enabled: false
     architecture: standalone
