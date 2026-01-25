@@ -8,3 +8,4 @@
 Chart.lock
 site/
 .DS_Store
+.secrets.hash

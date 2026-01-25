@@ -5,7 +5,7 @@
 KUBECONFIG = $(shell pwd)/metal/kubeconfig.yaml
 KUBE_CONFIG_PATH = $(KUBECONFIG)
 
-default: bootstrap external smoke-test post-install applications
+default: secrets-init bootstrap external smoke-test post-install applications
 
 secrets-init:
 	@./scripts/secrets-init
