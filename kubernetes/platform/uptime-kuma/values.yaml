@@ -22,22 +22,5 @@ uptime-kuma:
       value: "sqlite"
   mariadb:
     enabled: false
-    architecture: standalone
-    auth:
-      database: uptime_kuma
-      username: uptime_kuma
-      password: "uptime-kuma-db-password"
-      rootPassword: "uptime-kuma-root-password"
-    primary:
-      persistence:
-        enabled: true
-        size: 8Gi
-      resources:
-        requests:
-          cpu: 500m
-          memory: 512Mi
-        limits:
-          cpu: 1500m
-          memory: 1Gi
   serviceMonitor:
     enabled: false
