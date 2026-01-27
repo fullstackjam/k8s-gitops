@@ -6,7 +6,7 @@ app-template:
         app:
           image:
             repository: cloudflare/cloudflared
-            tag: 2026.1.1
+            tag: 2026.1.2
           args:
             - tunnel
             - --no-autoupdate
