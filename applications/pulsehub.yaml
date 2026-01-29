@@ -3,19 +3,17 @@ kind: Application
 metadata:
   name: pulsehub
   namespace: argocd
-  annotations:
-    argocd-image-updater.argoproj.io/image-list: pulsehub=fullstackjam/pulsehub
-    argocd-image-updater.argoproj.io/pulsehub.helm.image-name: image.repository
-    argocd-image-updater.argoproj.io/pulsehub.helm.image-tag: image.tag
-    argocd-image-updater.argoproj.io/write-back-method: argocd
-    argocd-image-updater.argoproj.io/git-branch: master
-    argocd-image-updater.argoproj.io/update-strategy: newest-build
+
 spec:
   project: default
   source:
     repoURL: https://github.com/fullstackjam/pulsehub
     targetRevision: master
     path: helm/pulsehub
+    helm:
+      parameters:
+        - name: image.tag
+          value: $ARGOCD_APP_REVISION
   destination:
     name: in-cluster
     namespace: pulsehub
