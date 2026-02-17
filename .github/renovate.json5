@@ -4,8 +4,6 @@
     'config:recommended',
   ],
   ignoreTests: true,
-  automergeType: 'pr',
-  automergeStrategy: 'rebase',
   packageRules: [
     {
       matchUpdateTypes: [

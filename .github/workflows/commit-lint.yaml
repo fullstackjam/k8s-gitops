@@ -55,5 +55,5 @@ jobs:
       - name: Validate Conventional Commits
         uses: wagoid/commitlint-github-action@v6
         with:
-          configFile: .commitlintrc.json
+          configFile: .commitlintrc.js
 
