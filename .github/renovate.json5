@@ -4,8 +4,6 @@
     'config:recommended',
   ],
   ignoreTests: true,
-  automergeType: 'pr',
-  automergeStrategy: 'rebase',
   packageRules: [
     {
       matchUpdateTypes: [
@@ -14,7 +12,6 @@
       ],
       groupName: 'all non-major dependencies',
       groupSlug: 'all-minor-patch',
-      automerge: true,
       ignoreTests: true,
       matchPackageNames: [
         '*',
